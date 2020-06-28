@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+    .left {
+      width: 100px;
+      order: 1;
+      background-color: darkgreen;
+    }
+    .right {
+      width: 200px;
+      order: 3;
+      background-color: darkmagenta;
+    }
+    .middle {
+      flex: 1;
+      order: 2;
+      background-color: darksalmon;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="middle"></div>
+    <div class="left"></div>
+    <div class="right"></div>
+  </div>
+</body>
+</html>

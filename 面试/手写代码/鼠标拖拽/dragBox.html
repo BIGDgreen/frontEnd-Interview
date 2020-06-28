@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #box {
+      width: 60px;
+      height: 60px;
+      background-color: red;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div id="box"></div>
+  <div id="point"></div>
+  <script>
+    (function drag() {
+      const box =  document.getElementById("box");
+      let draggable = false;
+      box.onmousedown = mousedown;
+      document.onmousemove = mousemove;
+      document.onmouseup = mouseup;
+
+      function mousedown(e) {
+        e = e || window.event;
+        draggable = true;
+
+        // 元素坐标
+        let boxX = box.offsetLeft;
+        let boxY = box.offsetTop;
+        
+        // 鼠标坐标
+        let mouseX = parseInt(getMouseXY(e).x);
+        let mouseY = parseInt(getMouseXY(e).y);
+
+        // 鼠标相对与元素的坐标
+        offsetX = mouseX - boxX;
+        offsetY = mouseY - boxY;
+      }
+      function mousemove(e) {
+        if(draggable) {
+          // console.log(offsetX, offsetY);
+          // 移动后元素应在的坐标
+          let x = Math.max(getMouseXY(e).x - offsetX, 0);
+          let y = Math.max(getMouseXY(e).y - offsetY, 0);
+
+          // 确保元素不超过可视区
+          let maxX = document.documentElement.clientWidth - box.offsetWidth;
+          let maxY = document.documentElement.clientHeight - box.offsetHeight;
+
+          x = Math.min(x, maxX);
+          y = Math.min(y, maxY);
+
+          box.style.left = x + 'px';
+          box.style.top = y + 'px';
+        }
+      }
+      function mouseup(e) {
+        draggable = false;
+      }
+
+      function getMouseXY(e) {
+        let x = e.pageX || e.offsetLeft + document.body.scrollLeft - document.body.clientLeft;
+        let y = e.pageY || e.offsetTop + document.body.scrollTop - document.body.clientTop;
+        // console.log(x, y)
+        return {x, y};
+      }
+    })();
+  </script>
+</body>
+</html>

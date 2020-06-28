@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    .left {
+      width: 100px;
+      /* height: 100vh; */
+      background-color: darkgreen;
+      float: left;
+    }
+    .right {
+      width: 200px;
+      /* height: 100vh; */
+      background-color: darkmagenta;
+      float: right;
+    }
+    .middle {
+      /* height: 100vh; */
+      margin-left: 100px;
+      margin-right: 200px;
+      background-color: darksalmon;
+    }
+    /*清除浮动**/
+    .container::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">12321</div>
+    <div class="right">312</div>
+    <div class="middle">3213</div>
+  </div>
+</body>
+</html>
