@@ -223,6 +223,8 @@ setTimeout、回调函数、封装私有变量、柯里化
 内存泄漏，博客：[关于JavaScript的内存泄漏](https://blog.csdn.net/qq_42532128/article/details/105019459)
 # this指向
 普通函数，this指向调用它的对象
+普通函数改变this指向：bind、apply、call
+
 箭头函数，this指向函数本身
 # bind、call和apply
 相同点：都可以改变this指向
@@ -232,7 +234,10 @@ setTimeout、回调函数、封装私有变量、柯里化
  1. bind不调用函数，返回一个新的函数，只有一个参数，指明this的指向
  2. call会直接调用函数，call只有一个参数，指明this的指向
  3. apply有两个参数，第二个参数一般为数组，apply将数组展开传给函数
-  
+
+# 用apply实现一个bind
+
+
 # 函数的防抖和节流
 目的：防止在事件持续触发的过程中频繁执行函数。
 

@@ -1,6 +1,9 @@
 # es6新特性
 let、const 块作用域 箭头函数、参数展开、剩余参数、Promise、解构赋值、Set和Map、weakSet和weakMap、Symbol（唯一）
 async、await（ES8）
+
+# let var const的区别
+
 # 箭头函数与普通函数的区别
 箭头函数：
 1. 更简洁的语法
@@ -48,6 +51,12 @@ await 等待的是一个表达式，这个表达式的计算结果是 Promise �
 
 想具体了解，可以查看这篇文章：[理解 JavaScript 的 async/await](https://segmentfault.com/a/1190000007535316)
 
+
+## promise 和 async await有什么区别
+
+await后面的函数有什么特点
+
+报错该怎么抓取
 # Proxy
 
 # ES7和ES8的新特性

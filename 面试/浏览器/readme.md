@@ -1,4 +1,11 @@
 # 从输入URL到浏览器显示页面经过了什么
+
+DNS解析，建立TCP连接，发送http请求
+
+server接收到http请求，处理，并返回
+
+客户端接收到返回数据，处理数据（渲染页面，执行js）
+
 1. 首先，在浏览器地址栏中输入url
 2. 浏览器先查看浏览器缓存-系统缓存-路由器缓存，如果缓存中有，会直接在屏幕中显示页面内容。若没有，则跳到第三步操作。
 3. 在发送http请求前，需要域名解析(DNS解析)，解析获取相应的IP地址，DNS具体解析过程在[前端面试之网络篇](https://blog.csdn.net/qq_42532128/article/details/105318439)中有介绍。
@@ -12,6 +19,7 @@
 11. ajax查询
 
 另外，如果是HTTPS协议，还会在TCP通信之前利用SSL协议的加密传输。这个具体过程也可以在[前端面试之网络篇](https://blog.csdn.net/qq_42532128/article/details/105318439)中看到。
+
 # window.onload、documentloaded、document.ready
 documentloaded（document.ready）：文档结构加载完成
 window.onload：资源全部加载完成

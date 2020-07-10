@@ -21,6 +21,11 @@ em：相对单位，基准点为父节点字体的大小，如果自身定义了
 rem：相对单位，可理解为”root em”, 相对根节点html的字体大小来计算，CSS3新加属性，chrome/firefox/IE9+支持。
 
 然后可以提一下他们在移动端适配上的应用。
+
+# rem为什么能够实现自适应布局，在不同的手机端表现是什么
+
+# fixed relative absolute的区别
+
 # display可以取哪些值
 inline、block、inline-block、list-item、run-in、none、table、table-row、table-column、table-cell、inherit、table-row-group、table-column-group
 # href和src的区别
@@ -43,3 +48,7 @@ Transition：对元素某个属性或多个属性的变化，进行控制(时间
 Animation：对元素某个属性或多个属性的变化，进行控制(时间等)，类似flash的补间动画。可以设置多个关键帧。
 
 Transition与Animation区别: transition需要触发一个事件,而animation在不需要触发任何事件的情况下也可以显式的随着时间变化来改变元素css的属性值，从而达到一种动画的效果。Transition: transition属性是一个简单的动画属性，非常简单非常容易用。可以说它是animation的简化版本，是给普通做简单网页特效用的。
+
+# flex的使用方法，flex：1代表了什么
+
+flex：1为3个属性的简写
