@@ -14,8 +14,20 @@ js最初被设计用在浏览器中，假如js是多线程的，当第一个线�
 js通过事件循环实现异步，具体过程为：
 执行一个宏任务,过程中如果遇到微任务,就将其放到微任务的`事件队列`里，当前宏任务执行完成后,会查看微任务的`事件队列`,并将里面全部的微任务依次执行完。然后在执行一个宏任务，这样一直循环下去。
 # 原型和原型链
+![原型链](https://s1.ax1x.com/2020/07/12/U8S7P1.jpg)
+
+函数的显式原型等于对象的隐式原型。
+
 ## 构造函数、原型、实例的关系
 构造函数中有一个prototype指针指向原型，原型中也有一个constructor指针指向构造函数。实例中有一个内部属性__proto__指向原型。构造函数和实例间通过原型产生联系，他们本身没有直接的关联。
+
+# prototype和__proto__的关系
+所有的对象都拥有__proto__属性，它指向构造函数的prototype原型对象，最后指向Object.prototype(Object是一个原生函数，所有的对象都是Object的实例)。
+
+所有的函数都同时拥有__proto__和prototype属性，函数的__proto__指向自己的函数实现，函数的prototype是一个对象，所以函数的prototype也有__proto__属性，指向Object.prototype。
+
+Object.prototype.__proto__指向null（原型链的终点指向null）。
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200404201754207.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
 ## new的基本原理（当let fun = new Fun（）时发生了什么？）
 1.	在构造函数内部声明了一个对象
 2.	将构造函数的作用域赋给这个对象（`obj.__proto__ = Fun.prototype`）
@@ -95,36 +107,105 @@ const student = new Student('张三', '男', '大三');
 student.sayName();
 console.log(student);
 ```
-# prototype和__proto__的关系
-所有的对象都拥有__proto__属性，它指向构造函数的prototype原型对象，最后指向Object.prototype(Object是一个原生函数，所有的对象都是Object的实例)。
 
-所有的函数都同时拥有__proto__和prototype属性，函数的__proto__指向自己的函数实现，函数的prototype是一个对象，所以函数的prototype也有__proto__属性，指向Object.prototype。
 
-Object.prototype.__proto__指向null（原型链的终点指向null）。
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200404201754207.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
+# js的8种数据类型
+- Boolean
+- Null
+- Undefined
+- Number
+- String
+- Symbol
+- Object
+- BigInt
 
 # 基本类型和引用类型
 基本类型：string、number、undefined、boolean、null、symbol
 
 引用类型：Object、Array、Function、Date、RegExp、包装类型（Boolean、Number、String）
 
-## 不同点
-基本类型存储的是值，没有函数可以调用。引用类型存储的是地址。
+## 关于基本类型和引用类型的说明
+基本类型：
+1. 基本类型的访问是按值访问
+2. 值不可变，只能通过新值接收
+3. 基本类型的比较是值的比较
+4. 基本类型存放在栈内存
+  
+引用类型：
+1. 引用类型的访问是按引用访问
+2. 引用类型值可变
+3. 引用类型的比较是引用的比较
+4. 引用类型的值是同时保存在占内存和堆内存中的对象
+   引用类型的存储同时需要栈内存和堆内存。
+   栈内存中存放变量的标识符和指向堆内存中该对象的地址，堆内存中存放实际对象
 
-基本类型的变量放在栈内存，引用类型的变量放在堆内存。
+# 三种判断类型的方式
+## typeof
+用`typeof`会得到以下结果：
+`bigint、undefined、number、string、object、function、boolean、symbol`
 
-注意点：栈内存中除了存放基本类型的变量，还存放引用类型变量的指针。
+当他检测引用类型`array`和`object`时，得到的都是`object`。
+
+**注意点：** `typeof null`会得到`object`，但`null`实际上是个基本类型。这是js遗留的一个bug。早期的js使用低位存储变量的类型信息，`000`开头表示对象，而`null`是全零，所以被错误地判断为`object`。
+
+暂时性死区
+
+## instanceof
+`instanceof`用于检测引用类型，它可以区分出`array`和`object`。
+
+其内部是通过原型链来实现的，右边变量的`prototype`在左边变量的原型链上即可。比如 `arr1 instanceof Array` ，他会在arr1的原型链上查找，这里只查找一层，`arr1.__proto__ == Array.prototype`，返回`true`。`instanceof`的具体实现机制见手写代码部分。
+
+## Object.prototype.toString.call()
+引擎内部
+
+会得到以下结果：
+- `[object Undefined]`
+- `[object Null]`
+
+- `[object Map]`
+- `[object Set]`
+- `[object Array]`
+- `[object Object]`
+- `[object Arguments]`
+  
+- `[object Boolean]`
+- `[object Date]`
+- `[object Number]`
+- `[object String]`
+- `[object Symbol]`
+- `[object Error]`
+- `[object RegExp]`
+- `[object Function]`
+
 
 # 深拷贝和浅拷贝，实现深拷贝
-浅拷贝和深拷贝都只针对于引用数据类型，浅拷贝只复制指向某个对象的指针，而不复制对象本身，新旧对象还是共享同一块内存，所以当一个对象发生变化时，另一个对象随之改变；
+浅拷贝只复制指向某个对象的指针，而不复制对象本身，新旧对象还是共享同一块内存，所以当一个对象发生变化时，另一个对象随之改变；
 
 深拷贝会另外创造一个一模一样的对象，新对象跟原对象不共享内存，修改新对象不会改到原对象；
 
 区别：浅拷贝只复制对象的第一层属性、深拷贝可以对对象的属性进行递归复制；
 
+浅拷贝：
+**1.普通版**：`Object.assign()`，只能拷贝原对象的可枚举的自身属性
+**2.进阶版**：`Object.create(Object.getProtypeOf(obj), Object.getOwnPropertyDescriptors(obj))`，可以拷贝原对象上所有的特性，包括不可枚举的属性和原型
+
 具体的实现：
-两种方法~
-第一种，递归实现：
+**1. 简陋版：用json的内置方法：**
+这种方法在业务中最常见。
+```js
+/**
+ *json实现对象深拷贝
+ *
+ * @param {Object || Array} source
+ * @returns
+ */
+function deepClone(source) {
+  return JSON.parse(JSON.stringify(source));
+}
+```
+缺点：无法深拷贝正则、拷贝函数和循环引用
+
+***2. 普通版：递归实现：**
 ```js
 /**
  *递归实现对象深拷贝
@@ -141,68 +222,10 @@ function deepClone(source) {
   }
   return target;
 }
-// 对象浅拷贝
-let obj1 = {a:1, b:2};
-let easyObj = obj1;
-easyObj.a = 3;
-console.log(obj1, easyObj);
-// 对象深拷贝
-let obj2 = {a:1, b:2, c: new Date()};
-let deepObj = deepClone(obj2);
-deepObj.a = 3;
-console.log(obj2, deepObj);
-// 数组浅拷贝
-let arr1 = [1, 2, {a: 1}];
-let easyArr = arr1;
-easyArr[2].a = 2;
-console.log(arr1, easyArr);
-// 数组深拷贝
-let arr2 = [1, 2, {a: 1}];
-let deepArr = deepClone(arr2);
-deepArr[2].a = 2;
-console.log(arr2, deepArr);
 ```
-第二种，用json的内置方法：
+***3. 复杂版：递归实现：**
 
-```js
-/**
- *json实现对象深拷贝
- *
- * @param {Object || Array} source
- * @returns
- */
-function deepClone(source) {
-  return JSON.parse(JSON.stringify(source));
-}
-// 对象浅拷贝
-let obj1 = {a:1, b:2};
-let easyObj = obj1;
-easyObj.a = 3;
-console.log(obj1, easyObj);
-// 对象深拷贝
-let obj2 = {a:1, b:2};
-let deepObj = deepClone(obj2);
-deepObj.a = 3;
-console.log(obj2, deepObj);
-// 数组浅拷贝
-let arr1 = [1, 2, {a: 1}];
-let easyArr = arr1;
-easyArr[2].a = 2;
-console.log(arr1, easyArr);
-// 数组深拷贝
-let arr2 = [1, 2, {a: 1}];
-let deepArr = deepClone(arr2);
-deepArr[2].a = 2;
-console.log(arr2, deepArr);
-```
-
-# typeof和instanceof
-`typeof`用于检测基本类型，当他检测引用类型`array`和`object`时，得到的都是`object`。因此，我们需要`instanceof`。
-
-**注意点：** `typeof null`会得到`object`，但`null`实际上是个基本类型。这是js遗留的一个bug。早期的js使用低位存储变量的类型信息，`000`开头表示对象，而`null`是全零，所以被错误地判断为`object`。
-
-`instanceof`用于检测引用类型，它可以区分出`array`和`object`。其内部是通过原型链来实现的，比如 `arr1 instanceof Array` ，他会在arr1的原型链上查找，这里只查找一层，`arr1.__proto__ == Array.prototype`，返回`true`。`instanceof`的具体实现机制见手写代码部分。
-
+## Object.assign是深拷贝还是浅拷贝
 
 # 什么是事件委托（事件代理），事件委托有哪些优点？
 事件委托就是将事件绑定到父元素上，根据事件的冒泡，当子元素处理事件时会自动触发父元素的事件。通过判断事件对象event的target可以找到时间实际发生的子元素。

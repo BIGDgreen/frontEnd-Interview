@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.common.dev.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        {{obj}}
+        <div v-for="item in arr">
+            {{item}}
+        </div>
+        <button @click="click">aaaa</button>
+    </div>
+    <script>
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                obj: { a: { c: 1 } },
+                arr: [1, { a: 1 }]
+            },
+            mounted() {
+                console.log(this.obj);
+                this.arr[1].a = 2;
+            },
+            methods: {
+                click() {
+                    this.obj.a.c = 2;
+                    // this.obj.b = 2;
+                    console.log(this.obj);
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

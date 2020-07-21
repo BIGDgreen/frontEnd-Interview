@@ -20,6 +20,7 @@ http+加密+认证+完整性保护就得到https，而这些是通过SSL层实�
 下面这个图是我在《图解HTTP》中截取的。
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200404220534558.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
+
 # http2
 目标：改善用户在使用Web时的速度体验。
 
@@ -30,6 +31,7 @@ http+加密+认证+完整性保护就得到https，而这些是通过SSL层实�
 2. 多路复用：所谓多路复用，即在一个TCP连接中存在多个流，即可以同时发送多个请求。在客户端帧乱序发送，到对端后再根据每个帧首部的流标识符重新组装。
 3. Header压缩：使用HPACK（HTTP2头部压缩算法）压缩格式对传输的header进行编码。并在两端维护了索引表，用于记录出现过的header，后面在传输过程中就可以传输已经记录过的header的键名，对端收到数据后就可以通过键名找到对应的值。
 4. 服务器推送：在HTTP2.0中，服务端可以在客户端某个请求后，主动推送其他资源。
+   
 # DNS（域名）解析步骤与原理
 域名 -> IP地址
 TTL：域名解析信息在DNS中的存在时间
@@ -37,13 +39,15 @@ TTL：域名解析信息在DNS中的存在时间
 2. 操作系统缓存查找（C盘hosts 只读）
 3. 请求本地域名服务器Local DNS Server(80%找到)
 4. 请求Root DNS，返回gTLD Server（国际顶尖域名服务器）给LDNS，LDNS请求gTLD，gTLD查找并返回域名对应的Name Server地址（网站注册的域名服务器）
-1. Name Server根据映射关系表找到目标ip，返回给LDNS
-2. LDNS缓存这个域名和对应的ip
-3. LDNS把解析的结果返回给用户，用户根据TTL值缓存到本地系统缓存中，域名解析过程至此结束
+5. Name Server根据映射关系表找到目标ip，返回给LDNS
+6. LDNS缓存这个域名和对应的ip
+7. LDNS把解析的结果返回给用户，用户根据TTL值缓存到本地系统缓存中，域名解析过程至此结束
+
 # 域名发散和域名收敛
 域名发散：PC 时代对静态资源优化时，通常将静态资源分布在几个不同域，保证资源最完美地分域名存储，以提供最大并行度，让客户端加载静态资源更为迅速。
 
 域名收敛：移动端减少DNS解析时间
+
 # 跨域问题
 基于同源策略。当协议、域名、端口至少有一个不一致时就会发生跨域。
 ## 解决跨域的方案
@@ -51,6 +55,7 @@ TTL：域名解析信息在DNS中的存在时间
 2.	CORS，跨域资源共享。在服务端设置响应头`Access-Control-Allow-Origin`为客户端的地址。表示对这个连接放行。如果要传递cookie的话，需要在客户端设置`xhr.withCredentials = true`，在服务端设置响应报文`Access-Control-Allow-Credentails`为true。
 3.	设置代理服务器转发。这种方式实际上还是同源。因此服务器之间的通信不存在跨域的问题，所以可以设置一个与客户端同源的代理服务器作为中间人。（代理是设置哪一项）
 4. websocket
+
 # XSS和CSRF攻击
 ## XSS
 跨域脚本攻击，指的是攻击者将攻击脚本代码恶意注入传给服务器，就比如填写表单时，填入一段script代码盗用cookie。
@@ -128,9 +133,9 @@ fetch('/example').then(function(response) {
 TCP：面向连接、面向字节流、可靠传输、提供拥塞控制、仅支持单播传输、提供全双工通信
 
 UDP：无连接、可单播多播和广播、面向报文、不可靠性、头部开销小
+
 # WebSocket
 WebSocket是一种在单个TCP连接上进行全双工通信的协议。主要是实现了服务器主动向客户端推送信息的功能。
 
 想要具体了解可以看看阮一峰老师的这篇文章：[WebSocket 教程](http://www.ruanyifeng.com/blog/2017/05/websocket.html)。
 
-我在面试过程中没有被问到过这个，问到的话我感觉结合项目讲会更好一点。
