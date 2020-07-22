@@ -54,6 +54,7 @@ vue内部实现了一组观察数组的变异方法，如`push`，`pop`，`shift
 
 # vue3的数据双向绑定
 vue3通过proxy实现响应式。这种方式本身就能对对象和数组的新属性实现监听。
+
 # vue虚拟DOM和diff算法
 ## 虚拟DOM
 js在操作真实DOM时的代价是很大的。每当js操作DOM时，浏览器都会从头开始重新解析HTML文档。而且我们可以从下图中看到每一个DOM对象都是很庞大的（可以自己在控制台试一试）。
@@ -65,35 +66,50 @@ js在操作真实DOM时的代价是很大的。每当js操作DOM时，浏览器�
 页面的更新先全部反映在js对象（虚拟DOM）上，等更新完成之后，再将最终的虚拟DOM映射成真实的DOM，然后在由浏览器渲染。而操作内存中的js对象会比操作DOM快得多。
 
 可以看到，虚拟DOM其实只是实现了一个中间存储的作用，最终的更新还是要通过真实DOM实现。这样看似麻烦，其实很大程度上提高了运行速度。
-## diff算法
-当数据发生改变时，set方法会让调用Dep.notify通知所有订阅者Watcher，订阅者就会调用patch给真实的DOM打补丁，更新相应的视图。
 
-diff的过程就是调用名为patch的函数，比较新旧节点，一边比较一边给真实的DOM打补丁。
+## vue的diff算法
+1. 概述：diff算法是虚拟DOM技术的必然产物：通过新旧虚拟DOM作对比（即diff），将变化的地方更新在真实DOM上；另外，也需要diff高效的执行对比过程（同层比较），从而降低时间复杂度为O(n)。
 
-diff算法的主要作用就是比较两棵树的结构差异并进行转换。
+2. 必要性：vue 2.x中为了降低Watcher粒度，每个组件只有一个Watcher与之对应，只有引入diff才能精确找到发生变化的地方。
 
-传统diff算法会循环递归每一个节点，寻找差异并进行转换，最终的算法复杂度为O(n^3)。
+3. 触发点：vue中diff执行的时刻是组件实例执行其更新函数时，它会比对上一次渲染结果oldVnode和新的渲染结果newVnode，此过程称为patch。
+   
+   数据响应式 -> 触发setter -> setter触发notify -> notify中会将watcher添加到dep（异步更新队列） ->  事件循环中watcher调用 -> 执行update -> 调用组件渲染函数和组件更新函数 -> 重新渲染最新的虚拟dom ->  执行更新函数 -> **触发diff** ，比较新旧虚拟dom
 
-vue的diff只进行**同层级比较**，忽略跨级操作，且对比的都是虚拟DOM节点。
+4. diff过程：diff过程整体遵循深度优先、同层比较的策略；两个节点之间比较会根据它们是否拥有子节点或者文本节点做不同操作；比较两组子节点是算法的重点，首先假设头尾节点可能相同做4次比对尝试，如果没有找到相同节点才按照通用方式遍历查找，查找结束再按情况处理剩下的节点；借助key通常可以非常精确找到相同节点，因此整个patch过程非常高效。
 
-我们先根据真实DOM生成一颗virtual DOM，当virtual DOM某个节点的数据改变后会生成一个新的Vnode，然后Vnode和oldVnode作对比，发现有不一样的地方就直接修改在真实的DOM上，然后使oldVnode的值为Vnode。
+**对应源码：**
+1. 必要性：`lifecycle.js - mountComponent()`
+   
+   vue中组件与`watcher`一一对应，而组件中可能存在很多个data中key的使用，为了精确地直到在更新过程中谁发生了变化，所以必须使用diff。
+2. 执行方式：`patch.js - patchVnode()` （ `patchVnode`是diff发生的地方 ）
+   
+   diff整体策略：**深度优先，同级比较**。
 
-想要了解具体的代码可以看看这篇文章：[解析vue2.0的diff算法](https://segmentfault.com/a/1190000008782928)。
+   diff过程：
+   - 先判断两个节点是否有孩子（深度优先），如果都有孩子，则比孩子，执行`updateChildren`
+   - 另外就是只有一方有孩子，和如果是文本节点会执行的操作
 
-### 设置key和不设置key的区别
-
-key的作用主要是为了高效的更新虚拟DOM
+3. 高效性：`patch.js - updateChildren()`
+   
+    关于`updateChildren`上的操作：
+     - 拿到两个节点首尾指针和首尾节点（4个指针，4个节点），依次判断新旧节点的头节点和尾节点（4种情况），根据不同的情况做出不同的处理，在判断过程中，通过`patchVnode`检查孩子节点。
+     - 如果四种情况都不满足，则开始遍历查找，根据不同的情况再次进行判断。
+     - 处理数组中剩下的元素，多删少补。
 
 # 虚拟DOM的优缺点
 
 # 模板是怎么解析的
 我们知道，模板中有`v-for`、`v-if`、`@click`之类的逻辑，因此模板最终当然会转换成js代码。实际上，模板最终会转换成render函数，这个函数会返回一个vnode对象，之后这个对象在update函数中被渲染成html。
+
 # vue路由的实现原理
 本质上是监听URL的变化，然后匹配路由规则显示相应页面，这期间无需刷新。
+
 ## hash模式（地址栏带有#）
 点击或浏览器历史跳转时，触发`onhashchange`事件,然后根据路由规则匹配显示相应页面(遍历路由表，装载相应组件到`router-link`)。
 
 手动刷新时,不会像服务器发送请求（不会触发`onhashchange`），触发`onload`事件，然后根据路由规则匹配显示相应页面。
+
 ## history模式
 跳转时会调用`history.pushState`方法,根据`to`属性改变地址，并切换相应组件到`router-link`。
 
@@ -124,3 +140,67 @@ fragments 不需要有一个根节点
 async setup() 异步组件
 
 Custom Renderer API 自定义渲染组件
+
+# v-if 和 v-for哪个优先级更高？如果同时出现，可以怎么优化？
+1. 同级时，v-for优先级高于v-if（打印render函数试验，看源码`/compiler/codegen/index.js#64`）
+2. 这样一来，如果同时出现，就不可避免的出发循环，浪费性能
+3. 可以将`v-if`放到`v-for`外层来避免这种情况
+4. 如果条件在循环内部，则通过计算属性提前过滤掉不需要显示的项，减少渲染消耗
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js"></script>
+</head>
+<body>
+    <div id="demo">
+        <h1>v-for和v-if谁的优先级高？应该如何正确使用避免性能问题？</h1>
+        <p v-if="isFolder" v-for="child in children">{{ child.title }}</p>
+        <!-- <template v-if="isFolder">
+            <p v-for="child in children">{{ child.title }}</p>
+        </template> -->
+    </div>
+    <script>
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            data() {
+                return {
+                    children: [
+                        { title: 'foo' },
+                        { title: 'bar' },
+                    ]
+                }
+            },
+            computed: {
+                isFolder() {
+                    return this.children && this.children.length > 0
+                }
+            },
+        });
+        console.log(app.$options.render);
+    </script>
+</body>
+</html>
+```
+
+# vue中组件的data为什么必须是个函数，而vue的根实例没有这个限制？
+1. vue组件可能存在多个实例，如果data直接是一个对象，那么组件的所有实例共享一个data，一个实例的状态变更将影响所有组件实例，造成污染
+2. 采用函数形式定义，在initData时会将其作为工厂函数返回全新data对象，从而规避多实例之间的状态污染
+3. 而在vue根实例创建过程中则不存在这个限制，因为根实例只有一个，不需要担心这种情况
+
+# vue中key的作用和工作原理
+源码位置：`src\core\vdom\patch.js - updateChildren`
+1. `key`的作用主要是为了高效的更新虚拟DOM。
+2. 源码层级的解释：在`patch`中，如果新旧节点相同，会执行`patchVnode`，在`patchVnode`中，如果两个节点都有孩子，会执行`updateChildren`，在`updateChildren`中，会通过`key`来判断是不是`sameVnode`，而如果没有设置`key`的话，两个节点的`key`都是`undefined`，再加上两个节点的标签等相同，新老节点的开始节点始终被认为是同一节点。这样一来，两个节点在`patchVnode`中被更新的概率就极大地提高。
+
+![key的作用](https://s1.ax1x.com/2020/07/22/Ubhjrn.jpg)
+
+## 用index设置key会造成问题
+1. **会影响性能：** 对于一个列表，如果删除列表中的某一项（非最后一项），index会相应的发生变化，此时，key也发生了变化，就会造成额外的渲染消耗。
+2. **会造成状态变化的bug：** 同样是上面那种情况，如果我选中了第三项（`key=2`被选中），然后删除第二项，此时，第三项变成第二项，它的`key`就变成了1，而第四项的`key`等于2，这样就产生了bug。
+
+

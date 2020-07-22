@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+</head>
+
+<body>
+    <div id="demo">
+        <h1>Vue组件的data为什么必须是个函数？</h1>
+        <comp></comp>
+        <comp></comp>
+        <div>{{count}}</div>
+    </div>
+    <script>
+        // 创建一个组件
+        Vue.component('comp', {
+            data: function () {
+                // 必须得是函数，否则报错
+                return {
+                    count: 0
+                }
+            },
+            template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+        });
+        // 创建实例
+        const app = new Vue({
+            el: '#demo',
+            data: {
+                // 可以正常使用
+                count: 0
+            }
+        });
+    </script>
+</body>
+
+</html>
