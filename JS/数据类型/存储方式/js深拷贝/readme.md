@@ -14,7 +14,7 @@ function deepClone(source) {
 ```
 缺点：无法深拷贝正则、拷贝函数和循环引用
 
-***2. 普通版：递归实现：**
+**2. 普通版：递归实现：**
 ```js
 /**
  *递归实现对象深拷贝
@@ -32,7 +32,7 @@ function deepClone(source) {
   return target;
 }
 ```
-***3. 终极版**
+**3. 终极版**
 考虑Date、RegExp、Symbol、BigInt等一切属性的拷贝和循环引用。
 ```js
 const deepClone = (obj, hash = new WeakMap) => {

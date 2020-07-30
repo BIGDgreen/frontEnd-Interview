@@ -1,3 +1,10 @@
+<!--
+ * @Author       : BigDgreen
+ * @Date         : 2020-07-17 21:41:42
+ * @LastEditors  : BigDgreen
+ * @LastEditTime : 2020-07-29 20:14:10
+ * @FilePath     : \前端知识点总结\JS\数据类型\类型转换\readme.md
+--> 
 ## 字符串转数组
 let str = '213';
 
@@ -18,19 +25,26 @@ var arrayLike = {
 ```
 
 1. slice
+```
 Array.prototype.slice.call(arrayLike);
+```
 
 2. splice
+```
 Array.prototype.splice.call(arrayLike, 0); // ["name", "age", "sex"] 
-
+```
 3. ES6 Array.from
+```
 Array.from(arrayLike); // ["name", "age", "sex"] 
-
+```
 4. apply
+```
 Array.prototype.concat.apply([], arrayLike)
-
+```
 5. ES6 ... 展开符
+```
 ... arrayLike
+```
 
 ### `Array.from()`与 `...` 展开符的区别
 使用展开符，展开对象必须可迭代

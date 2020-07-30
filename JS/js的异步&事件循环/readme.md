@@ -17,6 +17,8 @@
 如果传递给 await 的值已经是一个 Promise，那么这种优化避免了再次创建 Promise 包装器，在这种情况下，我们从最少三个 microtick 到只有一个 microtick。
 
 # 如何识别微任务和宏任务
+
+
 微任务：Promise > MutationObserver
 
 宏任务：MessageChannel > setTimeout
