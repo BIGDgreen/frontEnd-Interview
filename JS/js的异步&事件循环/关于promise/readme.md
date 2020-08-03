@@ -1,3 +1,10 @@
+<!--
+ * @Author       : BigDgreen
+ * @Date         : 2020-07-20 23:06:18
+ * @LastEditors  : BigDgreen
+ * @LastEditTime : 2020-08-02 19:49:22
+ * @FilePath     : \前端知识点总结\JS\js的异步&事件循环\关于promise\readme.md
+--> 
 # Promise有哪些优缺点？
 优点：
 - 可以解决异步嵌套
@@ -35,3 +42,4 @@ let promise = new Promise((resolve, reject) => {  // executor执行器
 ## 关于es9中的promise.resolve()
 1. 如果参数是普通值，则将其包装成promise
 2. 如果放的是promise，会等待这个promise执行完后再继续执行
+
