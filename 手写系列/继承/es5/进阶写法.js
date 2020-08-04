@@ -1,3 +1,6 @@
+/**
+ * 原型式继承
+ */
 function Person(name) {
     this.name = name;
 }

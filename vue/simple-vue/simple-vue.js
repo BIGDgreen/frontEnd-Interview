@@ -282,7 +282,7 @@ class Dep {
     }
 
     notify() {
-        console.log('notify');
+        // console.log('notify');
         this.collect.forEach(w => w.update());
     }
 }
