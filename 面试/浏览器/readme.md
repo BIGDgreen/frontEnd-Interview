@@ -1,3 +1,10 @@
+<!--
+ * @Author       : BigDgreen
+ * @Date         : 2020-06-28 17:27:19
+ * @LastEditors  : BigDgreen
+ * @LastEditTime : 2020-08-01 16:17:45
+ * @FilePath     : \前端知识点总结\面试\浏览器\readme.md
+--> 
 # 从输入URL到浏览器显示页面经过了什么
 
 DNS解析，建立TCP连接，发送http请求
@@ -94,3 +101,31 @@ Cache-Control 是 http1.1 时出现的 header 信息，主要是利用该字段�
 2. 某些文件修改非常频繁，比如在秒以下的时间内进行修改，(比方说1s内修改了N次)，if-modified-since能检查到的粒度是秒级的，这种修改无法判断，或者说UNIX记录MTIME只能精确到秒)；
 
 3. 某些服务器不能精确地得到文件的最后修改时间。
+
+# 浏览器内核
+主要分成两部分：渲染引擎(layout engineer或Rendering Engine)和JS引擎。
+
+渲染引擎：负责取得网页的内容（HTML、XML、图像等等）、整理讯息（例如加入CSS 等），以及计算网页的显示方式，然后会输出至显示器或打印机。浏览器的内核的不同对于网页的语法解释会有不同，所以渲染的效果也不相同。所有网页浏览器、电子邮件客户端以及其它需要编辑、显示网络内容的应用程序都需要内核。
+
+JS引擎：解析和执行javascript来实现网页的动态效果。最开始渲染引擎和JS引擎并没有区分的很明确，后来JS引擎越来越独立，内核就倾向于只指渲染引擎。
+
+# cookie、sessionStorage和localStorage
+## cookie
+- 有同源限制
+- 每个域上的cookie总数是有限的，不过浏览器之间各有不同
+  - Safari和Chrome没有硬性规定
+  - IE6及以下：20个
+  - Opera：30个
+  - IE7及以后、FireFox：50个
+  - 超出现之后，IE和Opera会通过`LRU(Least Recently Unused)`删除cookie，Firefox看上去是随机删除
+- cookie尺寸：大多数浏览器都有`4K`的限制。如果尝试创建超过最大尺寸限制的cookie，那么该cookie会被悄无声息地丢掉
+- cookie属性：`name`、`value`、`domain`、`path`、`expires`、`secure`。除了`secure`，其他都以键值对的形式存在
+  - `name=test`表示一个名称为`name`的cookie，值为`test`
+  - 名称和值都需要经过URL编码（编码：`encodeURIComponent()`，解码：`decodeURIComponent()`）
+  - 如果没有设置超时时间，默认在会话关闭时清除
+  - `httponly`：设置只允许服务端读取
+
+## Web Storage
+特点：
+1. 独立于服务端
+2. 可以存储大量数据

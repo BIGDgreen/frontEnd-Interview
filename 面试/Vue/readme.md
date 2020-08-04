@@ -1,26 +1,30 @@
-ps：这一部分最常考的是vue的数据双向绑定原理和虚拟DOM。
-
 # vue的特点
 MVVM框架、数据双向绑定、轻量、渐进式框架、易上手、运行速度快。
+
 不支持IE8及以下版本，不利于SEO，不适合大型项目开发。
+
 # vue和react的区别
 ## 运行时性能
 react中，当某个组件的状态发生变化时，它会以该组件为根，重新渲染整个组件子树。
 vue组件的依赖会在渲染过程中自动追踪。
 这使vue的开发者不用在开发时手动避免不必要的子组件的渲染。
-## HTML&CSS
+## HTML & CSS
 在React中，一切都是JavaScript。
 而Vue的整体思想是拥抱经典的Web技术，并在其上扩展。
 ## 写法
 react是类式的写法，api很少。与typeScript结合的更好。
 vue是声明式写法，通过传入各种options，api和参数都很多。
+
 # computed和watch有什么区别
 1. 功能上：computed是计算属性，watch是监听一个值的变化，然后执行对应的回调。
+   
 2. 是否调用缓存：computed中的函数所依赖的属性没有发生变化，那么调用当前的函数的时候会从缓存中读取，而watch在每次监听的值发生变化的时候都会执行回调。
 3. 是否调用return：computed中的函数必须要用return返回，watch中的函数不是必须要用return。
 
-使用场景：
+**使用场景：**
+
 computed：当一个属性受多个属性影响的时候，使用computed，如购物车商品结算。
+
 watch：当一条数据影响多条数据的时候，使用watch，如搜索框。
 
 # vue生命周期
@@ -35,12 +39,64 @@ watch：当一条数据影响多条数据的时候，使用watch，如搜索框�
 # mounted和created的区别
 created时节点还没渲染出来
 
-# 组件传值
-父传子：v-on props
-子传父：$emit()
-兄弟之间传值：
+# 组件通信
+整体分为两类：
+1. 父子组件之间通信
+   - `prop` / `emit`
+   - `children` / `parent`
+   - `provide` / `inject`
+   - `ref` / `refs`
+   - `eventBus`
+2. 兄弟组件通信
+3. 跨级通信
+   - `provide / inject`
+   - `$attrs / $listeners`
 
-# keep-alive的使用和原理
+另外，`eventBus`、`Vuex`、`localStorage / sessionStorage`适用于所有组件通信。
+
+## prop / emit
+父组件通过`props`的方式向子组件传递数据，子组件通过`$emit`向父组件通信。
+ 
+`prop` 只可以从上一级组件传递到下一级组件（父子组件），即所谓的单向数据流。而且 prop 只读，不可被修改，所有修改都会失效并警告。
+
+## children / parent
+会直接访问组件实例上绑定的父/子组件，不推荐使用。
+
+**注意**：
+- 边界情况，如在`#app`上拿`$parent`得到的是`new Vue()`的实例，在这实例上再拿`$parent`得到的是`undefined`，而在最底层的子组件拿`$children`是个空数组
+- 得到`$parent`和`$children`的值不一样，`$children` 的值是数组，而`$parent`是个对象
+
+## provide / inject
+简单来说就是父组件中通过`provide`来提供变量, 然后再子组件中通过`inject`来注入变量。这里不论子组件嵌套有多深, 只要调用了`inject` 那么就可以注入`provide`中的数据，而不局限于只能从当前父组件的`props`属性中拿取数据。
+
+## ref / refs
+`ref`：如果在普通的 `DOM` 元素上使用，引用指向的就是 `DOM` 元素；如果用在子组件上，引用就指向组件实例，可以通过实例直接调用组件的方法或访问数据。
+
+## eventBus
+`eventBus` 又称为事件总线，在`vue`中可以使用它来作为沟通桥梁的概念, 就像是所有组件共用相同的事件中心，可以向该中心注册发送事件或接收事件， 所以组件都可以通知其他组件。`eventBus`也有不方便之处, 当项目较大,就容易造成难以维护的灾难
+
+API：`EventBus.$emit`、`EventBus.$on`、`EventBus.$off`
+
+## Vuex
+`Vuex`采用**集中式存储管理**应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。 `Vuex` 解决了多个视图依赖于同一状态和来自不同视图的行为需要变更同一状态的问题，将开发者的精力聚焦于数据的更新而不是数据在组件之间的传递上
+
+## localStorage / sessionStorage
+通过`window.localStorage.getItem(key)`获取数据 
+
+通过`window.localStorage.setItem(key,value)`存储数据
+
+## $attrs / $listeners
+`$attrs` 包含了父作用域中不作为 `prop` 被识别 (且获取) 的 attribute 绑定 (`class` 和 `style` 除外)。当一个组件没有声明任何 `prop` 时，这里会包含所有父作用域的绑定 (`class` 和 `style` 除外)，并且可以通过 `v-bind="$attrs"` 传入内部组件。
+
+`$listeners`包含了父作用域中的 (不含 `.native` 修饰器的) `v-on` 事件监听器。它可以通过 `v-on="$listeners"` 传入内部组件。
+
+# Vuex
+## Vuex各个模块
+1. `state`：用于数据的存储，是store中的唯一数据源
+2. `getters`：如vue中的计算属性一样，基于state数据的二次包装，常用于数据的筛选和多个数据的相关性计算
+3. `mutations`：类似函数，改变state数据的唯一途径，且不能用于处理异步事件
+4. `actions`：类似于mutation，用于提交mutation来改变状态，而不直接变更状态，可以包含任意异步操作
+5. `modules`：类似于命名空间，用于项目中将各个模块的状态分开定义和操作，便于维护
 
 
 # vue2的数据双向绑定（响应式原理）
@@ -105,6 +161,8 @@ js在操作真实DOM时的代价是很大的。每当js操作DOM时，浏览器�
 # vue路由的实现原理
 本质上是监听URL的变化，然后匹配路由规则显示相应页面，这期间无需刷新。
 
+在没有懒加载和SSR的情况下，一开始就会请求所有的js脚本，后期的url变化都会交给js处理，不再向服务端发送请求。
+
 ## hash模式（地址栏带有#）
 点击或浏览器历史跳转时，触发`onhashchange`事件,然后根据路由规则匹配显示相应页面(遍历路由表，装载相应组件到`router-link`)。
 
@@ -116,6 +174,25 @@ js在操作真实DOM时的代价是很大的。每当js操作DOM时，浏览器�
 浏览器历史操作（前进，后退）,只会改变地址栏（页面内容不会变）,不会切换组件，需要使用`popstate`方法来切换组件。
 
 手动刷新,需要后端配合重定向，不然404。
+
+## 路由守卫
+使用场景
+
+## keep-alive的使用和原理
+`<keep-alive>` 包裹动态组件时，会缓存不活动的组件实例，而不是销毁它们。`<keep-alive>` 是一个抽象组件：它自身不会渲染一个 DOM 元素，也不会出现在父组件链中。
+
+它提供了`include`与`exclude`两个属性，允许组件有条件地进行缓存。
+
+当组件在 `<keep-alive>` 内被切换，它的 `activated` 和 `deactivated` 这两个生命周期钩子函数将会被对应执行。因为keep-alive会将组件保存在内存中，并不会销毁以及重新创建，所以不会重新调用组件的created等方法。
+
+**源码实现：**
+- 获取组件名称，通过`include`和`exclude`属性对组件进行筛选，如果在`exclude`中或者`include`中没有，则直接返回vnode（表示不需要缓存）
+- 如果已经做过缓存了则直接从缓存中获取组件实例给vnode
+- 否则，将当前vnode加入缓存
+- 这里的缓存用一个`cache`对象来表示
+- 用`watch`来监听`include`与`exclude`这两个属性的改变，在改变的时候修改`cache`缓存中的缓存数据（`pruneCache`），将不符合规则的组件实例用`$destroy`方法销毁
+
+`LRU`策略：最近最久未使用。
 
 # axios的底层实现
 
@@ -203,4 +280,5 @@ Custom Renderer API 自定义渲染组件
 1. **会影响性能：** 对于一个列表，如果删除列表中的某一项（非最后一项），index会相应的发生变化，此时，key也发生了变化，就会造成额外的渲染消耗。
 2. **会造成状态变化的bug：** 同样是上面那种情况，如果我选中了第三项（`key=2`被选中），然后删除第二项，此时，第三项变成第二项，它的`key`就变成了1，而第四项的`key`等于2，这样就产生了bug。
 
+# MVVM 框架的整体流程
 

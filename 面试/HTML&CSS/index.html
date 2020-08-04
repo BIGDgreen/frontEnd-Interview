@@ -1,3 +1,10 @@
+<!--
+ * @Author       : BigDgreen
+ * @Date         : 2020-07-11 23:08:36
+ * @LastEditors  : BigDgreen
+ * @LastEditTime : 2020-08-01 16:11:03
+ * @FilePath     : \前端知识点总结\面试\HTML&CSS\index.html
+-->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,19 +14,21 @@
     <title>Document</title>
     <style>
         .box {
-            box-sizing: border-box;
-            width: 100px;
             height: 100px;
-            border: 50px solid black;
-            /*扇形*/
-            border-radius: 50%;
-            border-color: black transparent transparent transparent;
+            background: black;
         }
     </style>
 </head>
 
 <body>
     <div class="box"></div>
+    <script>
+        window.onload = function () {
+            sessionStorage.setItem("test", 13431);
+            console.log(sessionStorage.getItem("test"));
+        }
+
+    </script>
 </body>
 
 </html>
