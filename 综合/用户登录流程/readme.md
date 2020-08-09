@@ -90,7 +90,7 @@ HTTP是一种无状态的协议，客户端每次发送请求时会与服务器�
 ```  
 3. signature 签名 
    
-`signature` 部分为对前两部分的签名，这个实现需要提供一个私钥`SECRECT_KEY`，这个私钥只要服务器知道。签名会按照`header`中写的算法来生成，生成过程如下：
+`signature` 部分为对前两部分的签名，这个实现需要提供一个私钥`SECRECT_KEY`，这个私钥只有服务器知道。签名会按照`header`中写的算法来生成，生成过程如下：
 ```js
 signature = HMACSHA256(`${base64UrlEncode(header)}.${base64UrlEncode(payload)}`,SECRECT_KEY)
 ```
