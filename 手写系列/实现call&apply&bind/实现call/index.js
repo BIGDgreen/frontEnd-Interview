@@ -12,7 +12,7 @@
  * 说明：由于call是ES3中的方法，因此该实现不会用到ES6
  */
 function myCall(context) {
-    var context = context || window;    // 默认为window
+    context = context || window;    // 默认为window
     // 获取调用call的函数
     context.fn = this;
     // 保存参数

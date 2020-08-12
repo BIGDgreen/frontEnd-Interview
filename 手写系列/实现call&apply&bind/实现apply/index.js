@@ -1,3 +1,10 @@
+/*
+ * @Author       : BigDgreen
+ * @Date         : 2020-07-19 23:53:25
+ * @LastEditors  : BigDgreen
+ * @LastEditTime : 2020-08-05 03:34:56
+ * @FilePath     : \前端知识点总结\手写系列\实现call&apply&bind\实现apply\index.js
+ */
 /**
  * 实现整体步骤：
  *  1. 将函数设为对象的属性
@@ -9,7 +16,7 @@
  *  2. 当this为null时，默认为window
  *  3. 返回拥有指定this和参数的函数的执行结果
  * 
- * 说明：由于call是ES3中的方法，因此该实现不会用到ES6
+ * 说明：由于apply是ES3中的方法，因此该实现不会用到ES6
  */
 function myApply(context, arr) {
     var context = context || window;    // 默认为window
