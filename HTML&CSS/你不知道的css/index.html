@@ -1,0 +1,43 @@
+<!--
+ * @Author       : BigDgreen
+ * @Date         : 2020-08-15 22:13:31
+ * @LastEditors  : BigDgreen
+ * @LastEditTime : 2020-08-15 22:21:20
+ * @FilePath     : \前端知识点总结\HTML&CSS\你不知道的css\index.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        :root {
+            --mainColor: yellowgreen;
+        }
+
+        body {
+            background: var(--mainColor);
+        }
+    </style>
+</head>
+
+<body>
+    <button is="button-hello">test</button>
+    <script>
+        class ButtonHelloElement extends HTMLButtonElement {
+            constructor() {
+                super();
+                this.addEventListener('click', () => {
+                    alert(123);
+                })
+            }
+        }
+        customElements.define('button-hello', ButtonHelloElement, {
+            extends: "button"
+        });
+    </script>
+</body>
+
+</html>

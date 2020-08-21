@@ -1,0 +1,60 @@
+<!--
+ * @Author       : BigDgreen
+ * @Date         : 2020-08-15 22:24:22
+ * @LastEditors  : BigDgreen
+ * @LastEditTime : 2020-08-17 21:33:31
+ * @FilePath     : \前端知识点总结\HTML&CSS\你不知道的css\gearWheel.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>css doodle</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/css-doodle/0.8.5/css-doodle.min.js"></script>
+    <style>
+        /*bfc*/
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <css-doodle>
+        :doodle {
+        @grid: 1x10 / 61.8vmin;
+        }
+        @place-cell:center;
+        border-radius: 50%;
+        border-style: dashed;
+        border-width:calc(@index()*1vmin);
+        @size:calc(@index()*10%);
+        border-color:hsla(calc(20 * @index()), 70%, 68%, calc(3/@index()*0.8));
+
+        --d:@rand(10s, 20s);
+        --rf:@rand(360deg);
+        --rt:calc(var(--rf)*@pick(1turn,-1turn));
+        animation:spin var(--d) linear infinite;
+
+        @keyframes spin {
+        from {
+        transform: rotate(var(--rf))
+        }
+
+        to {
+        transform: rotate(var(--rt))
+        }
+        }
+    </css-doodle>
+</body>
+
+</html>

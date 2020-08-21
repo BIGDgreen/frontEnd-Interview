@@ -1,6 +1,15 @@
+<!--
+ * @Author       : BigDgreen
+ * @Date         : 2020-06-30 19:53:37
+ * @LastEditors  : BigDgreen
+ * @LastEditTime : 2020-08-15 10:49:56
+ * @FilePath     : \前端知识点总结\浏览器\浏览器缓存\readme.md
+-->
+DNS缓存和页面资源缓存
+
 # cookie的特点
-- cookie是存储在浏览器的一段**字符串**，最大为5kb。
-- 跨域不共享。浏览器为每个域名都存储了cookie，不同域名中存储的cookie是互相隔离的。
+- cookie是存储在浏览器的一段**字符串**，最大为4kb。
+- 跨域不共享。浏览器为每个**域名**都存储了cookie，不同域名中存储的cookie是互相隔离的。
 - 格式如 `key=value;` 可以存储结构化数据。
 - 每次发送http请求，都会将本次请求的`请求域`的cookie一起发送给server端。
 - 同域名，cookie可以共享
@@ -20,7 +29,6 @@
 限制：设置`httpOnly`
 
 # server端操作cookie
-
 
 # redis
 redis为内存中的数据库。相比mysql来说，查询速度更快。断电可能会丢失。

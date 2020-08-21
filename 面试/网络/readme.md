@@ -13,14 +13,16 @@
 
 `http字段`：cookie的httponly属性。若为true，则只有在http请求头中会带有此cookie的信息，而不能通过document.cookie来访问此cookie（可以一定程度上地防止信息盗取）。
 
-`secure `字段：设置是否只能通过https来传递此条cookie
+`secure`字段：设置是否只能通过https来传递此条cookie
 
 # http和https的区别，TLS握手的过程
 这个是高频考点。
 
-`http+加密+认证+完整性`保护就得到https，而这些是通过SSL层实现的。
+`http+加密+认证+完整性保护` 就得到https，而这些是通过`SSL/TLS`层实现的。
 
 避免中间人攻击。
+
+![整体流程](https://user-gold-cdn.xitu.io/2018/5/21/1638197d98cf3281?imageslim)
 
 下面这个图是我在《图解HTTP》中截取的。
 
@@ -35,8 +37,8 @@
 1. 二进制传输：二进制帧层，指HTTP消息在客户端和服务端如何封装和传输。与HTTP1.x的采用的换行符分隔文本不同，HTTP/2 消息被分成很小的消息和frame,然后每个消息和frame用二进制编码。
    
 2. 多路复用：所谓多路复用，即在一个TCP连接中存在多个流，即可以同时发送多个请求。在客户端帧乱序发送，到对端后再根据每个帧首部的流标识符重新组装。
-3. Header压缩：使用HPACK（HTTP2头部压缩算法）压缩格式对传输的header进行编码。并在两端维护了索引表，用于记录出现过的header，后面在传输过程中就可以传输已经记录过的header的键名，对端收到数据后就可以通过键名找到对应的值。
-4. 服务器推送：在HTTP2.0中，服务端可以在客户端某个请求后，主动推送其他资源。
+3. Header压缩：使用 HPACK（HTTP2头部压缩算法）压缩格式对传输的header进行编码。并在两端维护了索引表，用于记录出现过的header，后面在传输过程中就可以传输已经记录过的header的键名，对端收到数据后就可以通过键名找到对应的值。
+4. 服务器推送：在 HTTP2.0 中，服务端可以在客户端某个请求后，主动推送其他资源。
    
 # DNS（域名）解析步骤与原理
 域名 -> IP地址
@@ -92,6 +94,9 @@ TTL：域名解析信息在DNS中的存在时间
 2. `Content-Type`为`text/plain`/`multipart/form-data`/`application/x-www-form-urlencoded`
 
 不符合以上条件的请求就肯定是复杂请求了。 复杂请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为"预检"请求,该请求是 option 方法的，通过该请求来知道服务端是否允许跨域请求。
+
+## 优化OPTIONS请求
+设置`Access-Control-Max-Age`字段，那么当第一次请求该URL时会发出 `OPTIONS` 请求，浏览器会根据返回的 `Access-Control-Max-Age` 字段缓存该请求的`OPTIONS`预检请求的响应结果（具体缓存时间还取决于浏览器的支持的默认最大值，取两者最小值，一般为 10分钟）。在缓存有效期内，该资源的请求（ **URL和header字段都相同的情况下** ）不会再触发预检。（chrome 打开控制台可以看到，当服务器响应 `Access-Control-Max-Age` 时只有第一次请求会有预检，后面不会了。注意要开启缓存，去掉 `disable cache` 勾选。）
 
 ## postMessage可以解决的问题
 - 页面和其打开的新窗口的数据传递
@@ -162,6 +167,7 @@ fetch('/example').then(function(response) {
     // 中途任何地方出错...在此处理 :( 
 });
 ```
+
 # TCP三次握手/四次挥手
 ## 三次握手
 发送端首先发送一个带SYN标志的数据包给对方。接收端收到后，回传一个带有SYN/ACK标志的数据包以示传达确认信息。最后，发送端再回传一个带ACK标志的数据包，代表握手结束。
@@ -170,10 +176,13 @@ fetch('/example').then(function(response) {
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200405111702906.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
 以上信息来自《图解HTTP》。
 
+“三次握手”的目的是“为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误”。
 ## 四次挥手
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200405112909886.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
 
-想了解更多可以看一下这篇博客：[TCP的三次握手与四次挥手理解及面试题（很全面）](https://blog.csdn.net/qq_38950316/article/details/81087809?depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-1&utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-1)。
+想了解更多可以看一下这篇博客：[通俗大白话来理解TCP协议的三次握手和四次分手](https://github.com/jawil/blog/issues/14)。
+
+![](https://camo.githubusercontent.com/92800a8405ffab35ba53a6fc2aa664385be4ab24/687474703a2f2f75706c6f61642d696d616765732e6a69616e7368752e696f2f75706c6f61645f696d616765732f323434383735322d363030663232613930323432623536652e6a70673f696d6167654d6f6772322f6175746f2d6f7269656e742f7374726970253743696d61676556696577322f322f772f31323430)
 
 # TCP的流量控制和拥塞控制
 ## 流量控制

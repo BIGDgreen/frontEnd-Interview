@@ -102,11 +102,13 @@ BFC就是页面上的一个隔离的独立容器，容器里面的子元素不�
 
 **作用：**
 1.	避免margin重叠
-
+   
 属于同一个BFC的相邻box会发生margin重叠，所以可以设置两个不同的bfc（包裹div）
+
 2.	自适应两栏布局
 
 每个盒子的margin box的左边，与包含块border box的左边相接触(对于从左往右的格式化，否则相反)。即使存在浮动也是如此。可以给一个块添加overflow:hidden，使其成为BFC。
+
 3.	清除浮动
 
 不给父节点设置高度，子节点设置浮动的时候，会发生高度塌陷（父节点的高度为border和）。根据计算BFC的高度时，浮动元素也参与计算，激活父节点的BFC。
@@ -142,7 +144,7 @@ BFC就是页面上的一个隔离的独立容器，容器里面的子元素不�
 # css水平垂直居中
 以下所有方法的前提都是父元素`width`，`height`都有值。
 1. 父元素`display: flex;` + 要居中的子元素`margin:auto`
-2. 父元素flex(四个属性设置全！)
+2. 父元素flex(四个属性设置全)
 3. 子元素`position:relative;top:50%;left:50%;transform:translate(-50%,-50%);`
 4. 父元素`position:relative` + 子元素`position: absolute;top: 50%;left: 50%;margin-top: -50px;margin-left: -50px;`
    这里设置`margin-top: -50px;margin-left: -50px;`与上面设置`transform:translate(-50%,-50%);`效果相同

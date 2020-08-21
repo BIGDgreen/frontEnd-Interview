@@ -1,3 +1,4 @@
+路由懒加载：webpackjsonp
 # vue runtime + complier
 ## runtime 运行时
 生命周期
@@ -46,29 +47,36 @@ requestAnimationFrame（API）：设置动画事件
 ## 优化页面展示的指标
 **FP（First Paint）** 第一个像素点落地的时候（第一帧数据渲染出来）
 Parse HTML -> 第一帧数据
-<div id="app"></div>
 
-FCP（First Contentful Paint） 首次内容绘制（第一次把有内容的东西绘制出来）
+`<div id="app"></div>`
+
+HTML页面加载下来
+
+骨架屏
+
+**FCP（First Contentful Paint）** 首次内容绘制（第一次把有内容的东西绘制出来）
+
+css js 静态资源加载下来 
+
 页面大致结构出现
  FCP时间提前 —— 減少白屏
 
-1. 骨架屏
-2. 预渲染（静态渲染）
-   静态内容放在本地先渲染，剩下内容留占位
+**FMP（First Meaningful Paint）** 首次有效绘制
 
-   
-FMP（First Mainingful Paint） 首次有效绘制
+ajax请求的数据加载下来
+
 内容全部填充完毕
 
-资源和网络优化
-3. 预加载preload
-4. webpack打包方案
+**资源和网络优化**
+
+1. 预加载preload
+2. webpack打包方案
    prefetch <link rel='prefetch' href='//...'>
    link prefetch
    dns prefetch
    prerendering <link rel='prerendering' href='//...'>
 
-5. preconnect
+3. preconnect
    http dns TLS（加密） tcp
 
 webpack 
@@ -82,6 +90,68 @@ worker
 - shared worker
 - service worker  实现： PWA 本地缓存
   - service worker声明周期
+
+
+## vue优化
+
+1. 全部打包到main.js => 动态加载路由，提取公共组件
+
+`plugin-syntax-dynamic-import` => 路由动态加载的库（babel中）
+
+```js
+Vue.component('async-component', resolve => {
+    import('./AsyncComponent.js')
+    .then(AsyncComponent => {
+        resolve(AsyncComponent.default);
+    });
+})
+```
+
+`optimization.splitChunks`提取公共组件
+
+2. ssr 预渲染 同构
+   
+- ssr：服务端渲染（对于php jsp）
+  
+  vue -> json -> vue-server-renderer -> html
+
+- 同构：一套代码，多端使用（对于vue react nuxt）
+  
+  请求 -> node(vue项目) -> 解析 -> 转换成html -> 客户端
+
+  扛不住并发
+
+- 预渲染：预先渲染 webpack vue打包出来的项目js放到 **无头游览器** 执行 -> 获取到预渲染的页面html内容 -> index.html -> 放到CDN  FCP/FMP提前到FP
+
+3. 加loading -> 骨架屏 -> 预渲染
+4. webpack entry 改为多页应用
+5. 资源请求时间片的处理
+6. CDN
+7. quickLink：在浏览器空闲的时候去解析预加载可能要跳转的页面
+   
+   > preload
+   > 
+   > `<link rel="preload">` 
+   > 
+   > 浏览器预加载是提前加载在html中声明的资源。
+   > 
+   > `preload` 允许控制浏览器何时加载，可以动态注入，不会阻塞`window.onload`，只专注于当前页面。设定浏览器资源加载的优先级。
+
+   > prefetch
+   >
+   > 1. `<link rel='prefetch' href='/pic.png' />`
+   > 2. DNS预解析 `<link rel='dns-prefetch' href='xxx.com'>` 移动端优化
+
+   > prerender 在后端页面已经渲染完毕
+   >
+   >  `<link rel='prerender' href='/pic.png' />`
+   
+   > preconnect 允许一个http请求正式发给服务器前预先执行一些操作
+   >
+   > DNS解析 TLS协商 TCP握手
+   >
+   > `<link rel='prerender' href='/pic.png' />`
+webpack plugin插件
 
 # vue数据监听
 Object.defineProperty() 不止是监听数据变化

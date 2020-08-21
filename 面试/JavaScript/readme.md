@@ -432,3 +432,10 @@ window.requestAnimationFrame(callback);
 - 通过`postMessage()`传递消息，通信内容是拷贝关系，即传值而不是传址，浏览器先将通信内容串行化，然后把串行化后的字符串发给 `Worker`，后者再将它还原
 - 同源限制：分配给 `Worker` 线程运行的脚本文件，必须与主线程的脚本文件同源
 - `Worker` 线程无法读取本地文件，即不能打开本机的文件系统（file://），它所加载的脚本，必须来自网络
+
+## BOM的对象和属性
+1. window对象
+2. location对象
+3. navigator对象
+4. screen对象
+5. history对象

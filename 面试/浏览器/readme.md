@@ -2,7 +2,7 @@
  * @Author       : BigDgreen
  * @Date         : 2020-06-28 17:27:19
  * @LastEditors  : BigDgreen
- * @LastEditTime : 2020-08-01 16:17:45
+ * @LastEditTime : 2020-08-04 17:00:00
  * @FilePath     : \前端知识点总结\面试\浏览器\readme.md
 --> 
 # 从输入URL到浏览器显示页面经过了什么
@@ -55,18 +55,19 @@ window.onload：资源全部加载完成
 这里借鉴一下[实践这一次，彻底搞懂浏览器缓存机制](https://segmentfault.com/a/1190000017962411#item-5)这里面的内容。
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200405231603804.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
+
 访问缓存优先级：
 1. 内存（memory cache）
 2. 磁盘（disk cache）
 3. 网络请求
 ## 强缓存
-浏览器在加载资源时，会先根据本地缓存资源的 header 中的信息判断是否命中强缓存，如果命中则直接使用缓存中的资源不会再向服务器发送请求。
+浏览器在加载资源时，会先根据本地缓存资源的 `header` 中的信息判断是否命中强缓存，如果命中则直接使用缓存中的资源不会再向服务器发送请求。
 
-这里的 header 中的信息指的是 expires 和 cahe-control。
+这里的 header 中的信息指的是 expires 和 cache-control。
 ### Expires
 该字段是 http1.0 时的规范，它的值为一个绝对时间的 GMT 格式的时间字符串，比如`Expires:Mon,18 Oct 2066 23:59:59 GMT`。这个时间代表着这个资源的失效时间，在此时间之前，即命中缓存。这种方式有一个明显的缺点，由于失效时间是一个绝对时间，所以当服务器与客户端时间偏差较大时，就会导致缓存混乱。
 ### Cache-Control
-Cache-Control 是 http1.1 时出现的 header 信息，主要是利用该字段的 max-age 值来进行判断，它是一个相对时间，例如 Cache-Control:max-age=3600，代表着资源的有效期是 3600 秒。cache-control 除了该字段外，还有下面几个比较常用的设置值：
+Cache-Control 是 http1.1 时出现的 header 信息，主要是利用该字段的 max-age 值来进行判断，它是一个相对时间，例如 `Cache-Control:max-age=3600`，代表着资源的有效期是 3600 秒。cache-control 除了该字段外，还有下面几个比较常用的设置值：
 
 `no-cache`：需要进行协商缓存，发送请求到服务器确认是否使用缓存。
 
@@ -89,11 +90,11 @@ Cache-Control 是 http1.1 时出现的 header 信息，主要是利用该字段�
 如果命中缓存，则返回 304，并且不会返回资源内容，并且不会返回 `Last-Modify`。
 
 ### ETag/If-None-Match
-与 `Last-Modify/If-Modify-Since` 不同的是，`Etag/If-None-Match `返回的是一个校验码。ETag 可以保证每一个资源是唯一的，资源变化都会导致` ETag `变化。服务器根据浏览器上的 If-None-Match 值来判断是否命中缓存。
+与 `Last-Modify/If-Modify-Since` 不同的是，`ETag / If-None-Match `返回的是一个校验码。ETag 可以保证每一个资源是唯一的，资源变化都会导致` ETag `变化。服务器根据浏览器上的 `If-None-Match` 值来判断是否命中缓存。
 
-与 `Last-Modified `不一样的是，当服务器返回 304 Not Modified 的响应时，由于 ETag 重新生成过，response header 中还会把这个` ETag` 返回，即使这个` ETag` 跟之前的没有变化。
+与 `Last-Modified `不一样的是，当服务器返回 `304 Not Modified` 的响应时，由于 `ETag` 重新生成过，`response header` 中还会把这个` ETag` 返回，即使这个` ETag` 跟之前的没有变化。
 
-`Last-Modified `与 `ETag `是可以一起使用的，服务器会优先验证 `ETag`，一致的情况下，才会继续比对 Last-Modified，最后才决定是否返回 304。
+`Last-Modified `与 `ETag `是可以一起使用的，服务器会优先验证 `ETag`，一致的情况下，才会继续比对 `Last-Modified`，最后才决定是否返回 304。
 
 ## last-modified缺点
 1. 一些文件也许会周期性的更改，但是他的内容并不改变(仅仅改变修改时间)，这个时候我们并不希望客户端认为这个文件被修改了，而重新get；

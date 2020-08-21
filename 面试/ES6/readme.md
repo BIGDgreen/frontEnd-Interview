@@ -2,7 +2,7 @@
  * @Author       : BigDgreen
  * @Date         : 2020-06-28 17:27:19
  * @LastEditors  : BigDgreen
- * @LastEditTime : 2020-08-04 11:12:11
+ * @LastEditTime : 2020-08-12 08:47:06
  * @FilePath     : \前端知识点总结\面试\ES6\readme.md
 --> 
 # es6新特性
@@ -62,6 +62,12 @@ next方法返回又会返回一个对象，有`value`和`done`两个属性，val
 5. 不能简单返回对象字面量，需要用小括号包起来
 6. 箭头函数不能当做 Generator 函数,不能使用 yield 关键字
 
+# Map和Object的区别
+1. Object对象有原型， 也就是说他有默认的key值在对象上面， 除非我们使用Object.create(null)创建一个没有原型的对象；
+2. 在Object对象中， 只能把String和Symbol作为key值， 但是在Map中，key值可以是任何基本类型(String, Number, Boolean, undefined, NaN….)，或者对象(Map, Set, Object, Function , Symbol , null….);
+3. 通过Map中的size属性， 可以很方便地获取到Map长度， 要获取Object的长度， 只能用别的方法；
+4. Map对象实例中数据的排序是根据用户push的顺序进行排序的， 而Object实例中key,value的顺序就是有些规律了，他们会先排数字开头的key值，然后才是字符串开头的key值。
+
 # Map、Set、weakMap、weakSet与垃圾回收机制
 Set：类似数组，成员值唯一，常用于数组去重
 
@@ -101,3 +107,12 @@ await 等待的是一个表达式，这个表达式的计算结果是 Promise �
 ES7：ES7在ES6的基础上添加三项内容：求幂运算符（**）、Array.prototype.includes()方法、函数作用域中严格模式的变更。
 
 ES8：async、await、Object.values()、字符串填充padStart()、padEnd()
+
+# Proxy
+`Proxy` 对象用于定义基本操作的自定义行为（如属性查找、赋值、枚举、函数调用等）。
+
+```js
+const p = new Proxy(target, handler)
+```
+`target`：要使用 Proxy 包装的目标对象（可以是任何类型的对象，包括原生数组，函数，甚至另一个代理）。
+`handler`：一个通常以函数作为属性的对象，各属性中的函数分别定义了在执行各种操作时代理 p 的行为。
