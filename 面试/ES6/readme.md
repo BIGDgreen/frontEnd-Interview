@@ -2,7 +2,7 @@
  * @Author       : BigDgreen
  * @Date         : 2020-06-28 17:27:19
  * @LastEditors  : BigDgreen
- * @LastEditTime : 2020-08-12 08:47:06
+ * @LastEditTime : 2020-08-28 15:28:39
  * @FilePath     : \前端知识点总结\面试\ES6\readme.md
 --> 
 # es6新特性
@@ -63,19 +63,26 @@ next方法返回又会返回一个对象，有`value`和`done`两个属性，val
 6. 箭头函数不能当做 Generator 函数,不能使用 yield 关键字
 
 # Map和Object的区别
-1. Object对象有原型， 也就是说他有默认的key值在对象上面， 除非我们使用Object.create(null)创建一个没有原型的对象；
-2. 在Object对象中， 只能把String和Symbol作为key值， 但是在Map中，key值可以是任何基本类型(String, Number, Boolean, undefined, NaN….)，或者对象(Map, Set, Object, Function , Symbol , null….);
-3. 通过Map中的size属性， 可以很方便地获取到Map长度， 要获取Object的长度， 只能用别的方法；
+1. Object对象有原型，也就是说他有默认的key值在对象上面， 除非我们使用Object.create(null)创建一个没有原型的对象；
+2. 在Object对象中，只能把String和Symbol作为key值，但是在Map中，key值可以是任何基本类型(String, Number, Boolean, undefined, NaN…)，或者对象(Map, Set, Object, Function, Symbol, null…);
+3. 通过Map中的size属性，可以很方便地获取到Map长度，要获取Object的长度，只能用别的方法；
 4. Map对象实例中数据的排序是根据用户push的顺序进行排序的， 而Object实例中key,value的顺序就是有些规律了，他们会先排数字开头的key值，然后才是字符串开头的key值。
 
+## 获取Object长度的方法
+通过遍历获取，对象遍历方法有：
+- `for-in`：返回所有能通过对象访问的、可枚举属性，其中既包括存在于实例中的属性，也**包括存在于原型中的属性**。
+- `Object.keys()`：接收一个对象作为参数，返回一个包含所有**可枚举属性**的字符串数组。
+- `Reflect.ownKeys()`：返回一个由目标对象自身的属性键组成的数组。包括不可枚举属性和`Symbol`属性。
+- `Object.getOwnPropertyNames()`：得到所有实例属性，**不论是否可枚举**。
+
 # Map、Set、weakMap、weakSet与垃圾回收机制
-Set：类似数组，成员值唯一，常用于数组去重
+`Set`：类似数组，成员值唯一，常用于数组去重
 
-weakSet：成员只能是对象，对象都是弱引用（垃圾回收机制不考虑 WeakSet 对该对象的引用），不可遍历
+`weakSet`：成员只能是对象，对象都是弱引用（垃圾回收机制不考虑 WeakSet 对该对象的引用），不可遍历
 
-Map：类似于对象，也是键值对的集合，但是“键”的范围不限于字符串，各种类型的值（包括对象）都可以当作键
+`Map`：类似于对象，也是键值对的集合，但是“键”的范围不限于字符串，各种类型的值（包括对象）都可以当作键
 
-weakMap：只接受对象作为键名（不接受null），WeakMap的键名所指向的对象，不计入垃圾回收机制
+`weakMap`：只接受对象作为键名（不接受null），`WeakMap`的键名所指向的对象，不计入垃圾回收机制
 
 # 关于异步
 这部分内容在[js的异步&事件循环](https://github.com/BIGDgreen/frontEnd-Interview/tree/master/JS/js%E7%9A%84%E5%BC%82%E6%AD%A5%26%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF)中有详细介绍。

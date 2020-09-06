@@ -23,9 +23,9 @@ vue是声明式写法，通过传入各种options，api和参数都很多。
 
 **使用场景：**
 
-computed：当一个属性受多个属性影响的时候，使用computed，如购物车商品结算。
+`computed`：当一个属性受多个属性影响的时候，使用computed，如购物车商品结算。
 
-watch：当一条数据影响多条数据的时候，使用watch，如搜索框。
+`watch`：当一条数据影响多条数据的时候，使用watch，如搜索框。
 
 # vue生命周期
 生命周期钩子函数：**beforeCreate、created、beforeMount、mounted、beforeUpdate、updated、beforeDestroy、destroyed**。
@@ -38,7 +38,7 @@ watch：当一条数据影响多条数据的时候，使用watch，如搜索框�
 
 - `beforeCreate`：不能获取到 `props`、`data` 中定义的值，也不能调用 `methods` 中定义的函数。因为该函数在`initState`之前被调用。
 - `created`：该阶段还不能访问DOM。但可以访问`props`、`data`等属性。
-- `beforeMount`：挂在之前被调用，`render`函数首次被调用，生成虚拟DOM。
+- `beforeMount`：挂在之前被调用，`render`函数首次被调用，**生成虚拟DOM**。
 - `mounted`：挂载完成，DOM 树已经完成渲染到页面，**可进行 DOM 操作**。
 - `beforeUpdate`：数据更新时调用，发生在虚拟 DOM 打补丁之前。这里适合在更新之前访问现有的 DOM，比如手动移除已添加的事件监听器。
 - `updated`：虚拟DOM重新渲染，补丁以最小的DOM开支重新渲染DOM。
@@ -104,13 +104,13 @@ API：`EventBus.$emit`、`EventBus.$on`、`EventBus.$off`
 4. `actions`：类似于mutation，用于提交mutation来改变状态，而不直接变更状态，可以包含任意异步操作
 5. `modules`：类似于命名空间，用于项目中将各个模块的状态分开定义和操作，便于维护
 
-
 # vue2的数据双向绑定（响应式原理）
 vue的数据双向绑定是通过`数据劫持+观察者模式`实现的。
 
 通过重写`Object.defineProperty()`的get和set属性实现数据劫持。当数据发生改变时会触发set方法，只要将一些需要更新的方法放进去就可以实现data更新view。
 
 `Object.defineProperty()`只能将对象的属性改为getter/setter，而无法实现数组的双向绑定。
+
 ## 数组的更新方式
 vue内部实现了一组观察数组的变异方法，如`push`，`pop`，`shift`，`unshift`，`splice`，`sort`，`reverse`其内部使用了数组的属性来实现数据的双向绑定。
 
@@ -144,6 +144,7 @@ js在操作真实DOM时的代价是很大的。每当js操作DOM时，浏览器�
 1. 必要性：`lifecycle.js - mountComponent()`
    
    vue中组件与`watcher`一一对应，而组件中可能存在很多个data中key的使用，为了精确地知道在更新过程中谁发生了变化，所以必须使用diff。
+   
 2. 执行方式：`patch.js - patchVnode()` （ `patchVnode`是diff发生的地方 ）
    
    diff整体策略：**深度优先，同级比较**。
@@ -211,6 +212,20 @@ js在操作真实DOM时的代价是很大的。每当js操作DOM时，浏览器�
 
 `LRU`策略：最近最久未使用。
 
+## 完整的导航解析流程
+1. 导航被触发。
+2. 在失活的组件里调用 `beforeRouteLeave` 守卫。
+3. 调用全局的 `beforeEach` 守卫。
+4. 在重用的组件里调用 `beforeRouteUpdate` 守卫 (2.2+)。
+5. 在路由配置里调用 `beforeEnter`。
+6. 解析异步路由组件。
+7. 在被激活的组件里调用 `beforeRouteEnter`。
+8. 调用全局的 `beforeResolve` 守卫 (2.5+)。
+9. 导航被确认。
+10. 调用全局的 `afterEach` 钩子。
+11. 触发 DOM 更新。
+12. 调用 `beforeRouteEnter` 守卫中传给 `next` 的回调函数，创建好的组件实例会作为回调函数的参数传入。
+
 # axios的底层实现
 
 # Vue3的新特性
@@ -237,7 +252,7 @@ Custom Renderer API 自定义渲染组件
 
 # v-if 和 v-for哪个优先级更高？如果同时出现，可以怎么优化？
 1. 同级时，v-for优先级高于v-if（打印render函数试验，看源码`/compiler/codegen/index.js#64`）
-2. 这样一来，如果同时出现，就不可避免的出发循环，浪费性能
+2. 这样一来，如果同时出现，就不可避免的触发循环，浪费性能
 3. 可以将`v-if`放到`v-for`外层来避免这种情况
 4. 如果条件在循环内部，则通过计算属性提前过滤掉不需要显示的项，减少渲染消耗
 ```html

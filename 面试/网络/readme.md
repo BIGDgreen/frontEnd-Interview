@@ -28,7 +28,7 @@
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200404220534558.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
 
-# http2
+# http2.0
 目标：改善用户在使用Web时的速度体验。
 
 主要基于SPDY协议。它是Google开发的基于TCP协议的应用层协议。目标是优化HTTP协议的性能，通过压缩、多路复用和优先级 等技术，缩短网页的加载时间并提高安全性。SPDY协议的核心思想是尽量减少TCP连接数。SPDY并不是一种用于替代HTTP的协议，而是对HTTP协议的增强。
@@ -129,26 +129,26 @@ Chrome 51 开始，浏览器的 Cookie 新增加了一个SameSite属性，用来
 3. None：关闭该属性。不过，前提是必须同时设置Secure属性（Cookie 只能通过 HTTPS 协议发送），否则无效。
    
 # 常见状态码及含义
-1xx 信息性状态码，表示接收的请求正在处理
-  - 100（请求以被部分处理）、101（切换协议）
+`1xx` 信息性状态码，表示接收的请求正在处理
+  - 100（请求已被部分处理）、101（切换协议）
 
-2xx 成功状态码，表示请求正常处理完毕
+`2xx` 成功状态码，表示请求正常处理完毕
   - 200（请求成功）、204（请求处理成功，但没有内容返回）、206（返回指定范围的内容）
 
-3xx 重定向状态码，表示需要进行附加操作以完成请求
+`3xx` 重定向状态码，表示需要进行附加操作以完成请求
    - 301（永久重定向）、302（临时重定向）、303（临时重定向，但要求使用GET方法）、304（请求资源未更改，直接使用缓存）
 
-4xx 客户端错误状态码，表示服务器无法处理请求
+`4xx` 客户端错误状态码，表示服务器无法处理请求
    - 400（请求出错）、401（未授权）、403（被服务器拒绝访问）、404（服务器上没有请求的资源）
 
-5xx 服务器错误状态码，表示服务器请求出错
+`5xx` 服务器错误状态码，表示服务器请求出错
    - 500（服务器内部错误）、503（服务器暂时无法处理请求）
 
-这里需要注意一下200和304在浏览器协商缓存下的作用。
+这里需要注意一下 200 和 304 在浏览器协商缓存下的作用。
 
 # fetch和ajax的区别
 fetch是xhr的替代品。
-ajax利用XMLHttpRequest对象来请求数据。ajax代码就不再贴出了，想看的可以去这里[前端面试之JavaScript篇](https://blog.csdn.net/qq_42532128/article/details/105316034)。（日常打广告哈哈）
+ajax利用`XMLHttpRequest`对象来请求数据。ajax代码就不再贴出了，想看的可以去这里[前端面试之JavaScript篇](https://blog.csdn.net/qq_42532128/article/details/105316034)。
 fetch 是全局量 window 的一个方法。特点：
 1. fetch是基于promise实现的，也可以结合async/await。
 2. fetch请求默认是不带cookie的，需要设置fetch（URL，{credentials:’include’})
