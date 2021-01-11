@@ -38,11 +38,9 @@ xhr.send(null);
 - 2 (loaded)： 请求已成功被服务端接收
 - 3 (interactive)： 请求正在被处理
 - 4 (complete)：请求完成，响应就绪
-   
-# Promise
-Promise 是一个对象，它代表了一个异步操作的最终完成或者失败，以及它的返回结果。
-## 解决的问题
-回调地狱。
+
+## 使用回调函数存在的问题
+1. 回调地狱
 
 缺点：本身无法终止异步。
 
@@ -54,6 +52,28 @@ Promise 是一个对象，它代表了一个异步操作的最终完成或者失
 - 容易滋生 bug。
 - 只能在回调里处理异常。
 
+另外，回调函数还存在几个缺点：
+2. 不能使用 `try catch` 捕获错误
+3. 不能直接 `return`
+
+回调地狱可以通过 `Generator` 或 `Promise` 解决。
+# Generator
+`Generator` 函数返回一个迭代器。
+
+解决回调地狱：
+```js
+function *fetch() {
+    yield ajax(url, () => {})
+    yield ajax(url1, () => {})
+    yield ajax(url2, () => {})
+}
+let it = fetch()
+let result1 = it.next()
+let result2 = it.next()
+let result3 = it.next()
+```
+# Promise
+Promise 是一个对象，它代表了一个异步操作的最终完成或者失败，以及它的返回结果。
 ## promise的特点
 - 有三种状态：`pending`、`fulfilled`、`rejected`，通过`resolve`和`reject`更改，另外，如果`executor`中出现错误，`promise`状态会直接变为`rejected`
 - 传递到 `then()` 中的函数被置入了一个微任务队列，而不是立即执行，这意味着它是在 JavaScript 事件队列的所有运行时结束了，事件队列被清空之后，才开始执行。
@@ -85,7 +105,7 @@ Promise 是一个对象，它代表了一个异步操作的最终完成或者失
 7. `Promise.resolve(value)`
    
    返回一个状态由给定value决定的Promise对象。如果该值是thenable(即，带有then方法的对象)，返回的Promise对象的最终状态由then方法执行决定；否则的话(该value为空，基本类型或者不带then方法的对象),返回的Promise对象状态为fulfilled，并且将该value传递给对应的then方法。通常而言，如果你不知道一个值是否是Promise对象，使用Promise.resolve(value) 来返回一个Promise对象,这样就能将该value以Promise对象形式使用。
-  
+
 ## Promise.prototype上挂载的方法
 原型上挂载的方法可以供实例调用，在这里就是`new Promise`。 
 1. `Promise.prototype.catch(onRejected)`

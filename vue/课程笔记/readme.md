@@ -56,7 +56,7 @@ HTML页面加载下来
 
 **FCP（First Contentful Paint）** 首次内容绘制（第一次把有内容的东西绘制出来）
 
-css js 静态资源加载下来 
+css js 静态资源加载下来
 
 页面大致结构出现
  FCP时间提前 —— 減少白屏
@@ -79,7 +79,7 @@ ajax请求的数据加载下来
 3. preconnect
    http dns TLS（加密） tcp
 
-webpack 
+webpack
 CommonsChunkPlugin插件 -> splitChunksPlugin插件
 dll
 

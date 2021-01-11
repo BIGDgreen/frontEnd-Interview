@@ -88,7 +88,7 @@ ES6:
 ```js
 /**
  * es6继承 Student继承Person
- */ 
+ */
 class Person {
   constructor(name, gender) {
     this.name = name;
@@ -121,7 +121,7 @@ console.log(student);
 - BigInt
 
 # 基本类型和引用类型
-基本类型：string、number、undefined、boolean、null、symbol
+基本类型：string、number、undefined、boolean、null、symbol、BigInt
 
 引用类型：Object、Array、Function、Date、RegExp、包装类型（Boolean、Number、String）
 
@@ -131,7 +131,8 @@ console.log(student);
 2. 值不可变，只能通过新值接收
 3. 基本类型的比较是值的比较
 4. 基本类型存放在栈内存
-  
+5. 基本类型存储的是值，不能调用函数
+
 引用类型：
 1. 引用类型的访问是按引用访问
 2. 引用类型值可变
@@ -168,7 +169,7 @@ console.log(student);
 - `[object Array]`
 - `[object Object]`
 - `[object Arguments]`
-  
+
 - `[object Boolean]`
 - `[object Date]`
 - `[object Number]`
@@ -178,6 +179,11 @@ console.log(student);
 - `[object RegExp]`
 - `[object Function]`
 
+# [] == ![] 为什么是 true
+执行步骤：
+1. ![] 即 false -> 0
+2. [] -> 0
+3. 0 == 0 为 true
 # 深拷贝和浅拷贝，实现深拷贝
 浅拷贝只复制指向某个对象的指针，而不复制对象本身，新旧对象还是共享同一块内存，所以当一个对象发生变化时，另一个对象随之改变；
 
@@ -370,7 +376,7 @@ AMD（Asynchronous  Module  Definition，异步模块定义）
 浏览器端模块化开发的规范，require.js为AMD规范的实现
 接口：define、require、config
 特点：异步加载，不阻塞页面的加载，能并行加载多个模块，但是不能按需加载，必须提前加载所需依赖
-## ES6 module
+## ES module
 接口：import、export、export default
 内嵌在网页中的用法：
 ```js
@@ -386,6 +392,13 @@ AMD（Asynchronous  Module  Definition，异步模块定义）
 3. ES6 模块的设计思想是尽量的静态化，编译时加载”或者静态加载，编译时输出接口
 4. ES6 模块export、import命令可以出现在模块的任何位置，但是必须处于模块顶层。如果处于块级作用域内，就会报错
 5. ES6模块输出的是值的引用
+
+## ES module 和 CommonJS 区别
+1. CommonJS 支持动态导入，也就是 `require(${path}/xx.js)`，后者目前不支持，但是已有提案
+2. CommonJS 是同步导入，因为用于服务端，文件都在本地，同步导入即使卡住主线程影响也不大。而后者是异步导入，因为用于浏览器，需要下载文件，如果也采用同步导入会对渲染有很大影响
+3. CommonJS 在导出时都是值拷贝，就算导出的值变了，导入的值也不会改变，所以如果想更新值，必须重新导入一次。但是 ES Module 采用实时绑定的方式，导入导出的值都指向同一个内存地址，所以导入值会跟随导出值变化
+4. ES Module 会编译成 `require/exports` 来执行的
+
 ### Tree-Shaking
 介绍：消除无用的代码，减少js包的大小，从而减少页面的加载时间。
 
@@ -417,7 +430,7 @@ AMD（Asynchronous  Module  Definition，异步模块定义）
 
 该函数一个 `long` 整数，即请求 ID ，是回调列表中唯一的标识，是个非零值，没别的意义。可以传这个值给 `window.cancelAnimationFrame()` 以取消回调函数。
 
-回调函数执行次数通常与浏览器屏幕刷新次数相匹配。大多数电脑显示器的刷新频率是60Hz，大概相当于每秒钟重绘60次，因此回调函数执行频率大概是`1000ms/60`，约等于`16.7ms`。
+回调函数执行次数通常与浏览器屏幕刷新次数相匹配。大多数电脑显示器的刷新频率是60Hz，大概相当于每秒钟重绘60次，因此回调函数执行频率大概是`1000ms/60`，约等于`16.7ms`。该函数的延时效果是精确的，没有其他定时器时间不准的问题，可以通过该函数来实现 `setTimeout`。
 
 为了提高性能和电池寿命，因此在大多数浏览器里，当`requestAnimationFrame()` 运行在后台标签页或者隐藏的`<iframe>` 里时，`requestAnimationFrame()` 会被暂停调用以提升性能和电池寿命。
 

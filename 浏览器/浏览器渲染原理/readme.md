@@ -2,12 +2,13 @@
 ## 图示
 浏览器的渲染过程（因为我用的是谷歌浏览器，这里以Webkit内核为例）
 ![浏览器渲染原理](https://img-blog.csdnimg.cn/20191109191441714.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
+
 ## 图解
 
  1. 在地址栏输入URL并按下回车后，浏览器开始请求HTML资源（不一定是HTML类型，这里以HTML为例），之后开始HTML的解析，解析完后生成DOM树。
  2. 与此同时，浏览器也请求了CSS资源，解析完后生成CSSOM。
  3. DOM树与CSSOM树结合生成渲染树（Render Tree）。
- 4. layout：回流，获得节点的几何信息。通过构造渲染树，我们将可见DOM节点以及它对应的样式结合起来，可是我们还需要计算它们在设备视口(viewport)内的确切位置和大小，这个计算的阶段就是回流。 
+ 4. layout：回流，获得节点的几何信息。通过构造渲染树，我们将可见DOM节点以及它对应的样式结合起来，可是我们还需要计算它们在设备视口(viewport)内的确切位置和大小，这个计算的阶段就是回流。
  5. Painting：重绘，获得节点的像素信息。将渲染树的每个节点都转换为屏幕上的实际像素，这个阶段就叫做重绘节点。
 ### Parser（解析器）工作机制
 #### 解析的概念
@@ -47,9 +48,12 @@ HTML解析包括标记化和构建树两个过程。以下是HTML解析流程图
 构建树流程图及图解如下所示：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200117130116895.gif)![在这里插入图片描述](https://img-blog.csdnimg.cn/20200117125152505.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70) 
 ### CSS解析
+
 以Webkit内核为例，解析过程如下所示：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200117131058516.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
+
 ### JS阻塞
+
 html/text被解析完生成DOM树后，也为JavaScript操作HTML提供了接口(DOM)。JavaScript改变DOM结构会引起HTML解析的折返，因此为了减少折回，HTML解析过程中，在js执行时会暂停解析（也就是减少回流，提高性能）。
 
 JavaScript阻塞HTML时机如下图所示
@@ -62,6 +66,14 @@ Webkit和FireFox都做了这种优化，在js解析的同时，另一个进程�
 （自己瞎琢磨着改的，有错误欢迎提出~）
 当同时存在JavaScript、CSS和HTML时：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20191110145116646.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
+# 几个问题
+
+## 为什么操作DOM会很消耗性能
+
+因为 DOM 是属于渲染引擎中的东西，而 JS 又是 JS 引擎中的东西。当我们通过 JS 操作 DOM 的时候，其实这个操作涉及到了**两个线程之间的通信**，那么势必会带来一些性能上的损耗。操作 DOM 次数一多，也就等同于一直在进行线程之间的通信，并且操作 DOM 可能还会带来**重绘回流**的情况，所以也就导致了性能上的问题。
+## 插入几万个 DOM，如何实现页面不卡顿
+1. 通过 `requestAnimationFrame` 循环插入DOM
+2. 虚拟滚动：只渲染可视区域内的内容，非可见区域的就完全不渲染了，当用户在滚动的时候就实时去替换渲染的内容
 # Chrome Performan 分析
 对于以下html文档进行分析。首先进入匿名模式（windows 快捷键`ctrl+shift+N`），并确保Performance中screenshots是选中的，在Performance中进行记录，得到的记录结果可以在[链接](https://pan.baidu.com/s/1WxVwaBbMJ_SziyEds97RRg)中下载。
 ```html

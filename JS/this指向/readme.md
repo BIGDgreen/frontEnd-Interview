@@ -31,10 +31,12 @@ function myNew() {
     return typeof res === 'object' ? res : obj; // 如果返回结果不是对象，就返回一个空对象
 }
 ```
-关于`call/apply/bind`的实现原理，可以在
+关于`call/apply/bind`的实现原理，可以在[实现call&apply&bind](https://github.com/BIGDgreen/frontEnd-Interview/tree/master/%E6%89%8B%E5%86%99%E7%B3%BB%E5%88%97/%E5%AE%9E%E7%8E%B0call%26apply%26bind)上查看。
+
+注意：当存在多个 `bind` 时，不管给函数 `bind` 几次，`fn` 中的 `this` 永远由第一次 `bind` 决定。
 
 ## 对于箭头函数
-- this来自作用域链，由于作用域链在函数进入上下文时就已经确定，因此this与函数执行时无关。
+- `this` 来自作用域链，由于作用域链在函数进入上下文时就已经确定，因此 `this` 与函数执行时无关。箭头函数中的 `this` 只取决包裹箭头函数的第一个普通函数的 `this` 。
 - 在箭头函数中，通过 `call()`或 `apply()` 方法调用一个函数时，只能传递参数，他们的第一个参数会被忽略。
 
 另外要注意的是：**箭头函数不能用作构造器，和 new 一起用会抛出错误。**

@@ -71,29 +71,41 @@ TTL：域名解析信息在DNS中的存在时间
 - `<img src=xxx>`
 - `<script src=xxx>`
 - `<link href=xxx>`
-  
+
 跨域并不是请求发不出去，请求能发出去，服务端能收到请求并正常返回结果，只是**结果被浏览器拦截了**。这也说明了跨域并不能完全阻止 `CSRF`，因为请求毕竟是发出去了。
 
 ## 解决跨域的方案
-1.	JSONP。利用`<script>`标签不发生跨域的特点，在服务器链接的参数中加入`callback`回调函数，通过这个回调函数获取服务端要传来的值。只能用于GET请求。
+1.	JSONP。利用 `<script>` 标签不发生跨域的特点，在服务器链接的参数中加入`callback`回调函数，通过这个回调函数获取服务端要传来的值。只能用于GET请求。
 2.	CORS，跨域资源共享。在服务端设置响应头`Access-Control-Allow-Origin`为客户端的地址。表示对这个连接放行。如果要传递cookie的话，需要在客户端设置`xhr.withCredentials = true`，在服务端设置响应报文`Access-Control-Allow-Credentials`为true。
 
     通过这种方式解决跨域问题的话，会在发送请求时出现两种情况，分别为**简单请求**和**复杂请求**。
 
-3.	设置代理服务器转发。这种方式实际上还是同源。因此服务器之间的通信不存在跨域的问题，所以可以设置一个与客户端同源的代理服务器作为中间人。（代理是设置哪一项）
+3. 设置代理服务器转发。这种方式实际上还是同源。因此服务器之间的通信不存在跨域的问题，所以可以设置一个与客户端同源的代理服务器作为中间人。（代理是设置哪一项）
 4. websocket
-5. postMessage，`postMessage()`方法允许来自不同源的脚本采用异步方式进行有限的通信，可以实现跨文本档、多窗口、跨域消息传递。
+5. postMessage，`postMessage()` 方法允许来自不同源的脚本采用异步方式进行有限的通信，可以实现跨文本档、多窗口、跨域消息传递。
    ```js
    otherWindow.postMessage(message, targetOrigin, [transfer]);
    ```
-
+   ```js
+   // 发送消息端
+    window.parent.postMessage('message', 'http://test.com')
+    // 接收消息端
+    var mc = new MessageChannel()
+    mc.addEventListener('message', event => {
+      var origin = event.origin || event.originalEvent.origin
+      if (origin === 'http://test.com') {
+        console.log('验证通过')
+      }
+    })
+   ```
+6. 设置 `document.domain`：该方式只能用于二级域名相同的情况下，比如 `a.test.com` 和 `b.test.com`。给页面添加 `document.domain = 'test.com'` 表示二级域名都相同就可以实现跨域。
 ## 简单请求和复杂请求
 
 简单请求需要同时满足以下条件：
 1. 使用的方法为`GET`/`HEAD`/`POST`
 2. `Content-Type`为`text/plain`/`multipart/form-data`/`application/x-www-form-urlencoded`
 
-不符合以上条件的请求就肯定是复杂请求了。 复杂请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为"预检"请求,该请求是 option 方法的，通过该请求来知道服务端是否允许跨域请求。
+不符合以上条件的请求就肯定是复杂请求了。 复杂请求的 CORS 请求，会在正式通信之前，增加一次 HTTP 查询请求，称为"预检"请求，该请求是 options 方法的，通过该请求来知道服务端是否允许跨域请求。
 
 ## 优化OPTIONS请求
 设置`Access-Control-Max-Age`字段，那么当第一次请求该URL时会发出 `OPTIONS` 请求，浏览器会根据返回的 `Access-Control-Max-Age` 字段缓存该请求的`OPTIONS`预检请求的响应结果（具体缓存时间还取决于浏览器的支持的默认最大值，取两者最小值，一般为 10分钟）。在缓存有效期内，该资源的请求（ **URL和header字段都相同的情况下** ）不会再触发预检。（chrome 打开控制台可以看到，当服务器响应 `Access-Control-Max-Age` 时只有第一次请求会有预检，后面不会了。注意要开启缓存，去掉 `disable cache` 勾选。）
@@ -114,9 +126,9 @@ TTL：域名解析信息在DNS中的存在时间
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200404221134630.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
 防范CSRF可遵循以下几种规则:
 1.	Get 请求不对数据进行修改
-2.	不让第三方网站访问到用户Cookie
+2.	不让第三方网站访问到用户Cookie，验证 `Referer` 字段
 3.	阻止第三方网站请求接口
-4.	请求时附带验证信息，如验证码或Token(这种情况下会发送预检请求)
+4.	请求时附带验证信息，如验证码或 Token (这种情况下会发送预检请求)
 ## XSS攻击，Cookie相关的字段，HttpOnly
 cookie中设置HttpOnly属性，那么通过js脚本将无法读取到cookie信息，这样能有效的防止XSS攻击。
 
@@ -142,7 +154,7 @@ Chrome 51 开始，浏览器的 Cookie 新增加了一个SameSite属性，用来
    - 400（请求出错）、401（未授权）、403（被服务器拒绝访问）、404（服务器上没有请求的资源）
 
 `5xx` 服务器错误状态码，表示服务器请求出错
-   - 500（服务器内部错误）、503（服务器暂时无法处理请求）
+   - 500（服务器内部错误）、502（网关错误）、503（服务器暂时无法处理请求）
 
 这里需要注意一下 200 和 304 在浏览器协商缓存下的作用。
 

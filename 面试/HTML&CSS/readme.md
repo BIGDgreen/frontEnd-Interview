@@ -9,21 +9,21 @@
 3. 即使在没有CSS样式情况下也以一种文档格式显示，并且是容易阅读的。
 4. 有利于搜索引擎优化（SEO）。
    
-# `<meta>`标签
+# `<meta>` 标签
 meta标签：提供给页面的一些元信息（名称/值对）， 比如针对搜索引擎和更新频度的描述和关键词。
 
-- `name`：名称/值对中的名称。常用的有author、description、keywords、generator、revised、others。 把 content 属性关联到一个名称。
-- `http-equiv`：没有name时，会采用这个属性的值。常用的有content-type、expires、refresh、set-cookie。把 content 属性关联到 http 头部。
-- `content`：名称/值对中的值， 可以是任何有效的字符串。 始终要和 name 属性或 http-equiv 属性一起使用。
+- `name`：名称/值对 中的名称。常用的有author、description、keywords、generator、revised、others。把 content 属性关联到一个名称。
+- `http-equiv`：没有 name 时，会采用这个属性的值。常用的有content-type、expires、refresh、set-cookie。把 content 属性关联到 http 头部。
+- `content`：名称/值对 中的值， 可以是任何有效的字符串。 始终要和 name 属性或 http-equiv 属性一起使用。
 - `scheme`：用于指定要用来翻译属性值的方案。
 
 # @import @media @charset 等 @ 规则
 `@` 规则（at-rule）是一个CSS语句，以 at 符号开头，`@` 后面跟一个标识符，并包括直到下一个分号的所有内容，或是下一个CSS代码块，就近原则，先到的为准。
 
 # 页面导入样式时，使用link和@import的区别
-- link属于XHTML标签，除了加载CSS外，还能用于定义RSS, 定义rel连接属性等作用，@import是CSS提供的，只能用于加载CSS
-- 页面被加载的同时，link会同时被加载，而@import引用的CSS会等到页面被加载完再加载
-- import 是 CSS2.1 提出的，只在IE5以上才能被识别，而link是XHTML标签，无兼容问题
+- link属于XHTML标签，除了加载CSS外，还能用于定义RSS, 定义 rel 连接属性等作用，@import 是CSS提供的，只能用于加载CSS
+- 页面被加载的同时，link 会同时被加载，而 @import 引用的 CSS 会等到页面被加载完再加载
+- import 是 CSS2.1 提出的，只在IE5以上才能被识别，而 link 是 XHTML 标签，无兼容问题
   
 # css中有哪些单位
 `px`、`em`、`rem`、`%`、`vh`、`vw`、`vmin`、`vmax`、`ex`、`ch`
@@ -38,7 +38,7 @@ meta标签：提供给页面的一些元信息（名称/值对）， 比如针�
 然后可以提一下他们在移动端适配上的应用。
 
 # rem为什么能够实现自适应布局，在不同的手机端表现是什么
-`rem`是相对根元素的大小。
+`rem` 是相对根元素的大小。
 
 根据屏幕宽度设置根元素的字体大小。这样一来其他基于根元素的大小会自动缩放。
 ```js
@@ -58,16 +58,15 @@ meta标签：提供给页面的一些元信息（名称/值对）， 比如针�
 
 - 浮动半脱离文档流，还会占据原来的位置
 
-- `absolute`和`fixed`定位会脱离文档流，不占据原来的位置
+- `absolute` 和 `fixed` 定位会脱离文档流，不占据原来的位置
 
 # display可以取哪些值
 inline、block、inline-block、list-item、run-in、none、table、table-row、table-column、table-cell、inherit、table-row-group、table-column-group
 
 # href和src的区别
-href：超文本引用。link、a。浏览器会识别href引用的文档并行下载该文档，并且不会停止对当前文档的处理。
+href：超文本引用。link、a。浏览器会识别 href 引用的文档并行下载该文档，并且不会停止对当前文档的处理。
 
-src：引入。img、script、iframe。src指向的内容会嵌入到文档中当前标签所在的位置。当浏览器解析到src引用时，会暂停浏览器的渲染，直到该资源加载完毕。这也是将js脚本放在底部而不是头部的原因。
-
+src：引入。img、script、iframe。src 指向的内容会嵌入到文档中当前标签所在的位置。当浏览器解析到 src 引用时，会暂停浏览器的渲染，直到该资源加载完毕。这也是将 js 脚本放在底部而不是头部的原因。
 
 # 三栏布局
 ## 横向三栏
@@ -82,7 +81,7 @@ src：引入。img、script、iframe。src指向的内容会嵌入到文档中�
 ## 竖向三栏
 
 
-# css3动画 transition和animation
+# css3动画 transition 和 animation
 Transition：对元素某个属性或多个属性的变化，进行控制(时间等)，类似flash的补间动画。但只有两个关键帧。开始，结束。
 
 Animation：对元素某个属性或多个属性的变化，进行控制(时间等)，类似flash的补间动画。可以设置多个关键帧。
@@ -104,11 +103,11 @@ Transition与Animation区别: transition需要触发一个事件，而animation�
 BFC 就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。反之也如此。
 
 **触发条件：**
-1.	float不是none
-2.	position不是static或relative（absolute、fixed）
-3.	display是inline-block、table-cell、flex、table-caption或inline-flex
-4.	overflow不是visible（hidden、auto、scroll）
-5.	body根元素
+1.	float 不是 none
+2.	position不是 static 或 relative（absolute、fixed）
+3.	display是 inline-block、table-cell、flex、table-caption或 inline-flex
+4.	overflow 不是 visible（hidden、auto、scroll）
+5.	body 根元素
 
 **作用：**
 1.	避免margin重叠
@@ -129,13 +128,13 @@ BFC 就是页面上的一个隔离的独立容器，容器里面的子元素不�
 清除浮动：
 1. 在最后一个浮动标签后添加一个标签，给其设置为`clear: both`。
    - 缺点：添加无意义的标签，语义化差
-2. 给父元素添加`overflow: auto`，触发BFC
+2. 给父元素添加 `overflow: auto`，触发BFC
    - 缺点：当内部元素宽度超出父元素宽度时，会出现滚动条
-   - 当设置`overflow: hidden`时，超出部分会被隐藏
-   - 通过设置`*zoom: 1;`兼容IE6、7
+   - 当设置 `overflow: hidden` 时，超出部分会被隐藏
+   - 通过设置 `*zoom: 1;` 兼容IE6、7
 3. 使用after伪元素清除浮动
    - 主流方法，推荐使用
-   - 通过设置`*zoom: 1;`兼容IE6、7
+   - 通过设置 `*zoom: 1;` 兼容IE6、7
    ```js
    选择符:after{
       content:"";
@@ -148,7 +147,7 @@ BFC 就是页面上的一个隔离的独立容器，容器里面的子元素不�
    ```
 4. 给父元素设置高度
    - 浮动元素高度不确定时不适用
-5. 给父元素设置`float`
+5. 给父元素设置 `float`
    - 同样是通过触发BFC，这样设置会使父元素半脱离文档流，后面的元素与该父元素同行显示
 
 # css水平垂直居中
