@@ -17,15 +17,43 @@ vue是声明式写法，通过传入各种options，api和参数都很多。
 
 # computed和watch有什么区别
 1. 功能上：computed是计算属性，watch是监听一个值的变化，然后执行对应的回调。
-   
+
 2. 是否调用缓存：computed中的函数所依赖的属性没有发生变化，那么调用当前的函数的时候会从缓存中读取，而watch在每次监听的值发生变化的时候都会执行回调。
-3. 是否调用return：computed中的函数必须要用return返回，watch中的函数不是必须要用return。
+
+3. 是否调用 return：computed中的函数必须要用return返回，watch中的函数不是必须要用return。
 
 **使用场景：**
 
 `computed`：当一个属性受多个属性影响的时候，使用computed，如购物车商品结算。
 
 `watch`：当一条数据影响多条数据的时候，使用watch，如搜索框。
+
+另外 computed 和 watch 还都支持对象的写法：
+```js
+vm.$watch('obj', {
+    // 深度遍历
+    deep: true,
+    // 立即触发
+    immediate: true,
+    // 执行的函数
+    handler: function(val, oldVal) {}
+})
+var vm = new Vue({
+  data: { a: 1 },
+  computed: {
+    aPlus: {
+      // this.aPlus 时触发
+      get: function () {
+        return this.a + 1
+      },
+      // this.aPlus = 1 时触发
+      set: function (v) {
+        this.a = v - 1
+      }
+    }
+  }
+})
+```
 
 # vue生命周期
 生命周期钩子函数：**beforeCreate、created、beforeMount、mounted、beforeUpdate、updated、beforeDestroy、destroyed**。
@@ -45,15 +73,31 @@ vue是声明式写法，通过传入各种options，api和参数都很多。
 - `beforeDestroy`：实例销毁之前调用，这里还可以访问实例数据。
 - `destroyed`：组件已销毁。
 
+## 生命周期描述
+在 beforeCreate 钩子函数调用的时候，是获取不到 props 或者 data 中的数据的，因为这些数据的初始化都在 initState 中。
+
+然后会执行 created 钩子函数，在这一步的时候已经可以访问到之前不能访问到的数据，但是这时候组件还没被挂载，所以是看不到的。
+
+接下来会先执行 beforeMount 钩子函数，开始创建 VDOM，最后执行 mounted 钩子，并将 VDOM 渲染为真实 DOM 并且渲染数据。组件中如果有子组件的话，会递归挂载子组件，只有当所有子组件全部挂载完毕，才会执行根组件的挂载钩子。
+
+接下来是数据更新时会调用的钩子函数 beforeUpdate 和 updated，这两个钩子函数没什么好说的，就是分别在数据更新前和更新后会调用。
+
+另外还有 keep-alive 独有的生命周期，分别为 activated 和 deactivated 。用 keep-alive 包裹的组件在切换时不会进行销毁，而是缓存到内存中并执行 deactivated 钩子函数，命中缓存渲染后会执行 actived 钩子函数。
+
+最后就是销毁组件的钩子函数 beforeDestroy 和 destroyed。前者适合移除事件、定时器等等，否则可能会引起内存泄露的问题。然后进行一系列的销毁操作，如果有子组件的话，也会递归销毁子组件，所有子组件都销毁完毕后才会执行根组件的 destroyed 钩子函数。
+
 # 组件通信
 整体分为两类：
 1. 父子组件之间通信
-   - `prop` / `emit`
-   - `children` / `parent`
+   - `props` / `emit`
+   - `$children` / `$parent`
    - `provide` / `inject`
    - `ref` / `refs`
    - `eventBus`
+   - 属性：`$listeners` / `.sync`（Vue2.3及以上版本）
+     - $listeners 属性会将父组件中的 (不含 .native 修饰器的) v-on 事件监听器传递给子组件，子组件可以通过访问 $listeners 来自定义监听器。
 2. 兄弟组件通信
+   - 可以通过查找父组件中的子组件实现，也就是 `this.$parent.$children`，在 `$children` 中可以通过组件 `name` 查询到需要的组件实例，然后进行通信。
 3. 跨级通信
    - `provide / inject`
    - `$attrs / $listeners`
@@ -62,7 +106,7 @@ vue是声明式写法，通过传入各种options，api和参数都很多。
 
 ## prop / emit
 父组件通过`props`的方式向子组件传递数据，子组件通过`$emit`向父组件通信。
- 
+
 `prop` 只可以从上一级组件传递到下一级组件（父子组件），即所谓的单向数据流。而且 prop 只读，不可被修改，所有修改都会失效并警告。
 
 ## children / parent
@@ -87,7 +131,7 @@ API：`EventBus.$emit`、`EventBus.$on`、`EventBus.$off`
 `Vuex`采用**集中式存储管理**应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。 `Vuex` 解决了多个视图依赖于同一状态和来自不同视图的行为需要变更同一状态的问题，将开发者的精力聚焦于数据的更新而不是数据在组件之间的传递上
 
 ## localStorage / sessionStorage
-通过`window.localStorage.getItem(key)`获取数据 
+通过`window.localStorage.getItem(key)`获取数据
 
 通过`window.localStorage.setItem(key,value)`存储数据
 
@@ -104,7 +148,44 @@ API：`EventBus.$emit`、`EventBus.$on`、`EventBus.$off`
 4. `actions`：类似于mutation，用于提交mutation来改变状态，而不直接变更状态，可以包含任意异步操作
 5. `modules`：类似于命名空间，用于项目中将各个模块的状态分开定义和操作，便于维护
 
-# vue2的数据双向绑定（响应式原理）
+# extend 能做什么
+extend 作用是扩展组件生成一个构造器，通常会与 $mount 一起使用。
+
+```js
+// 创建组件构造器
+let Component = Vue.extend({
+  template: '<div>test</div>'
+})
+// 挂载到 #app 上
+new Component().$mount('#app')
+// 除了上面的方式，还可以用来扩展已有的组件
+let SuperComponent = Vue.extend(Component)
+new SuperComponent({
+    created() {
+        console.log(1)
+    }
+})
+new SuperComponent().$mount('#app')
+```
+
+# mixin 和 mixins 区别
+mixin 用于**全局**混入，会影响到每个组件实例，通常插件都是这样做初始化的。
+
+```js
+Vue.mixin({
+    beforeCreate() {
+        // ...逻辑
+        // 这种方式会影响到每个组件的 beforeCreate 钩子函数
+    }
+})
+```
+
+虽然文档不建议我们在应用中直接使用 mixin，但是如果不滥用的话也是很有帮助的，比如可以全局混入封装好的 ajax 或者一些工具函数等等。
+
+mixins 应该是我们最常使用的扩展组件的方式了。如果多个组件中有相同的业务逻辑，就可以将这些逻辑剥离出来，通过 mixins 混入代码，比如上拉下拉加载数据这种逻辑等等。
+
+另外需要注意的是 mixins 混入的钩子函数会先于组件内的钩子函数执行，并且在遇到同名选项的时候也会有选择性的进行合并。
+# vue2 的数据双向绑定（响应式原理）
 vue的数据双向绑定是通过`数据劫持+观察者模式`实现的。
 
 通过重写`Object.defineProperty()`的get和set属性实现数据劫持。当数据发生改变时会触发set方法，只要将一些需要更新的方法放进去就可以实现data更新view。
@@ -135,7 +216,7 @@ js在操作真实DOM时的代价是很大的。每当js操作DOM时，浏览器�
 2. 必要性：vue 2.x中为了降低Watcher粒度，每个组件只有一个Watcher与之对应，只有引入diff才能精确找到发生变化的地方。
 
 3. 触发点：vue中diff执行的时刻是组件实例执行其更新函数时，它会比对上一次渲染结果oldVnode和新的渲染结果newVnode，此过程称为patch。
-   
+
    数据响应式 -> 触发setter -> setter触发notify -> notify中会将watcher添加到dep（异步更新队列） ->  事件循环中watcher调用 -> 执行update -> 调用组件渲染函数和组件更新函数 -> 重新渲染最新的虚拟dom ->  执行更新函数 -> **触发diff** ，比较新旧虚拟dom
 
 4. diff 过程：diff过程整体遵循深度优先、同层比较的策略：两个节点之间比较会根据它们是否拥有子节点或者文本节点做不同操作；比较两组子节点是算法的重点，首先假设头尾节点可能相同做4次比对尝试，如果没有找到相同节点才按照通用方式遍历查找，查找结束再按情况处理剩下的节点；借助key通常可以非常精确找到相同节点，因此整个patch过程非常高效。
@@ -174,7 +255,69 @@ js在操作真实DOM时的代价是很大的。每当js操作DOM时，浏览器�
 2. **会造成状态变化的bug：** 同样是上面那种情况，如果我选中了第三项（`key=2`被选中），然后删除第二项，此时，第三项变成第二项，它的`key`就变成了1，而第四项的`key`等于2，这样就产生了bug。
 
 # 模板是怎么解析的
-我们知道，模板中有`v-for`、`v-if`、`@click`之类的逻辑，因此模板最终当然会转换成js代码。实际上，模板最终会转换成render函数，这个函数会返回一个vnode对象，之后这个对象在update函数中被渲染成html。
+我们知道，模板中有`v-for`、`v-if`、`@click`之类的逻辑，因此模板最终当然会转换成js代码。实际上，模板最终会转换成 render 函数，这个函数会返回一个 vnode 对象，之后这个对象在 update 函数中被渲染成 html。
+
+模板编译过程分为三个阶段：
+1. 将模板解析为 AST
+2. 优化 AST
+3. 将 AST 转换为 render 函数
+
+在第一个阶段中，最主要的事情是通过各种各样的正则表达式去匹配模板中的内容，然后将内容提取出来做各种逻辑操作，接下来会生成一个最基本的 AST 对象。
+
+```js
+{
+    // 类型
+    type: 1,
+    // 标签
+    tag,
+    // 属性列表
+    attrsList: attrs,
+    // 属性映射
+    attrsMap: makeAttrsMap(attrs),
+    // 父节点
+    parent,
+    // 子节点
+    children: []
+}
+```
+
+然后会根据这个最基本的 AST 对象中的属性，进一步扩展 AST。
+
+接下来就是优化 AST 的阶段。在当前版本下，Vue 进行的优化内容其实还是不多的。只是对节点进行了静态内容提取，也就是将永远不会变动的节点提取了出来，实现复用 Virtual DOM，跳过对比算法的功能。在下一个大版本中，Vue 会在优化 AST 的阶段继续发力，实现更多的优化功能，尽可能的在编译阶段压榨更多的性能，比如说提取静态的属性等等优化行为。
+
+最后一个阶段就是通过 AST 生成 render 函数了。其实这一阶段虽然分支有很多，但是最主要的目的就是遍历整个 AST，根据不同的条件生成不同的代码罢了。
+
+# NextTick 原理分析
+
+`nextTick` 可以让我们在下次 DOM 更新循环结束之后执行延迟回调，用于获得更新后的 DOM。
+
+在 Vue 2.4 之前都是使用的 microtasks，但是 microtasks 的优先级过高，在某些情况下可能会出现比事件冒泡更快的情况，但如果都使用 macrotasks 又可能会出现渲染的性能问题。所以在新版本中，会默认使用 microtasks，但在特殊情况下会使用 macrotasks，比如 v-on。
+
+对于实现 macrotasks ，会先判断是否能使用 setImmediate ，不能的话降级为 MessageChannel ，以上都不行的话就使用 setTimeout。
+
+```js
+if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
+  macroTimerFunc = () => {
+    setImmediate(flushCallbacks)
+  }
+} else if (
+  typeof MessageChannel !== 'undefined' &&
+  (isNative(MessageChannel) ||
+    // PhantomJS
+    MessageChannel.toString() === '[object MessageChannelConstructor]')
+) {
+  const channel = new MessageChannel()
+  const port = channel.port2
+  channel.port1.onmessage = flushCallbacks
+  macroTimerFunc = () => {
+    port.postMessage(1)
+  }
+} else {
+  macroTimerFunc = () => {
+    setTimeout(flushCallbacks, 0)
+  }
+}
+```
 
 # vue路由的实现原理
 本质上是监听URL的变化，然后匹配路由规则显示相应页面，这期间无需刷新。
@@ -201,16 +344,17 @@ js在操作真实DOM时的代价是很大的。每当js操作DOM时，浏览器�
 
 它提供了`include`与`exclude`两个属性，允许组件有条件地进行缓存。
 
-当组件在 `<keep-alive>` 内被切换，它的 `activated` 和 `deactivated` 这两个生命周期钩子函数将会被对应执行。因为keep-alive会将组件保存在内存中，并不会销毁以及重新创建，所以不会重新调用组件的created等方法。
+当组件在 `<keep-alive>` 内被切换，它的 `activated` 和 `deactivated` 这两个生命周期钩子函数将会被对应执行。因为 keep-alive 会将组件保存在内存中，并不会销毁以及重新创建，所以不会重新调用组件的 created 等方法。
 
 **源码实现：**
+
 - 获取组件名称，通过`include`和`exclude`属性对组件进行筛选，如果在`exclude`中或者`include`中没有，则直接返回vnode（表示不需要缓存）
 - 如果已经做过缓存了则直接从缓存中获取组件实例给vnode
 - 否则，将当前vnode加入缓存
 - 这里的缓存用一个`cache`对象来表示
-- 用`watch`来监听`include`与`exclude`这两个属性的改变，在改变的时候修改`cache`缓存中的缓存数据（`pruneCache`），将不符合规则的组件实例用`$destroy`方法销毁
+- 用`watch`来监听`include`与`exclude`这两个属性的改变，在改变的时候修改`cache`缓存中的缓存数据（`pruneCache`），将不符合规则的组件实例用 `$destroy` 方法销毁
 
-`LRU`策略：最近最久未使用。
+`LRU` 策略：最近最久未使用。
 
 ## 完整的导航解析流程
 1. 导航被触发。
@@ -251,6 +395,7 @@ async setup() 异步组件
 Custom Renderer API 自定义渲染组件
 
 # v-if 和 v-for哪个优先级更高？如果同时出现，可以怎么优化？
+
 1. 同级时，v-for优先级高于v-if（打印render函数试验，看源码`/compiler/codegen/index.js#64`）
 2. 这样一来，如果同时出现，就不可避免的触发循环，浪费性能
 3. 可以将`v-if`放到`v-for`外层来避免这种情况
@@ -297,6 +442,7 @@ Custom Renderer API 自定义渲染组件
 ```
 
 # vue中组件的data为什么必须是个函数，而vue的根实例没有这个限制？
+
 1. vue组件可能存在多个实例，如果data直接是一个对象，那么组件的所有实例共享一个data，一个实例的状态变更将影响所有组件实例，造成污染
 2. 采用函数形式定义，在initData时会将其作为工厂函数返回全新data对象，从而规避多实例之间的状态污染
 3. 而在vue根实例创建过程中则不存在这个限制，因为根实例只有一个，不需要担心这种情况

@@ -7,9 +7,10 @@
  */
 /**
  * 函数防抖
- * 利用定时器，如果在规定时间内再次触发事件会将上次的定时器清除，即不会执行函数并重新设置一个新的定时器，直到超过规定时间自动触发定时器中的函数
- * @param {function} fn 
- * @param {number} interval 
+ * 利用定时器，如果在规定时间内再次触发事件会将上次的定时器清除，即不会执行函数并重新设置一个新的定时器，
+ * 直到超过规定时间自动触发定时器中的函数
+ * @param {function} fn
+ * @param {number} interval
  * @param {boolean} immediate 是否立即执行
  */
 const debounce = function (fn, interval = 17, immediate = true) {

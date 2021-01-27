@@ -85,7 +85,12 @@ XHTML 1.1 该 DTD 等同于 XHTML 1.0 Strict，但允许添加模型。
 # 全局监听错误的方法
 **同步：**`window.onerror`
 
-DOM0级事件：
+该方法能拦截到大部分的详细报错信息，但是也有例外：
+
+- 对于跨域的代码运行错误会显示 Script error. 对于这种情况我们需要给 script 标签添加 crossorigin 属性
+- 对于某些浏览器可能不会显示调用栈信息，这种情况可以通过 arguments.callee.caller 来做栈递归
+
+DOM0 级事件：
 ```js
 window.onerror = function(message, source, lineno, colno, error) { ... }
 ```
@@ -99,7 +104,7 @@ window.onerror = function(message, source, lineno, colno, error) { ... }
 若该函数返回false，则阻止浏览器报告错误的默认行为。
 
 **异步：**`window.onunhandledrejection`
-当Promise 被 reject 且**没有 reject 处理器**的时候，会触发 `unhandledrejection` 事件(通常是发生在window下，但是也可能发生在Worker中)。
+当Promise 被 reject 且 **没有 reject 处理器** 的时候，会触发 `unhandledrejection` 事件(通常是发生在window下，但是也可能发生在Worker中)。
 
 ```js
 window.addEventListener("unhandledrejection", event => {
@@ -126,7 +131,7 @@ window.unhandledrejection  = function(event) { ...};
 `innerHTML`则是DOM页面元素的一个属性，代表该元素的html内容。你可以精确到某一个具体的元素来进行更改。如果想修改document的内容，则需要修改`document.documentElement.innerElement`。
 
 innerHTML将内容写入某个DOM节点，不会导致页面全部重绘。
- 
+
 innerHTML很多情况下都优于document.write，其原因在于其允许更精确的控制要刷新页面的那一个部分。
 
 # DOM属性dataset

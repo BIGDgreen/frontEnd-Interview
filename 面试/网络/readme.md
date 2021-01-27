@@ -1,4 +1,5 @@
 # cookie有哪些字段
+
 `name`：名称
 
 `value`：值
@@ -15,10 +16,29 @@
 
 `secure`字段：设置是否只能通过https来传递此条cookie
 
-# http和https的区别，TLS握手的过程
+# Content-type
+
+类型格式：`type/subtype(;parameter)`
+
+## 常见的三种 Content-type
+
+### application/x-www-form-urlencoded
+
+HTTP会将请求参数用 `key1=val1&key2=val2` 的方式进行组织，并放到请求实体里面，注意如果是中文或特殊字符如"/"、","、“:" 等会自动进行URL转码。不支持文件，一般用于表单提交。
+
+### multipart/form-data
+
+生成了一个 boundary 用于分割不同的字段，在请求实体里每个参数以------boundary开始，然后是附加信息和参数名，然后是空行，最后是参数内容。多个参数将会有多个boundary块。如果参数是文件会有特别的文件域。最后以------boundary–为结束标识。multipart/form-data支持文件上传的格式，一般需要上传文件的表单则用该类型。
+
+### application/json
+
+JSON 是一种轻量级的数据格式，以“键-值”对的方式组织的数据。这个使用这个类型，需要参数本身就是json格式的数据，参数会被直接放到请求实体里，不进行任何处理。服务端/客户端会按json格式解析数据（约定好的情况下）。
+
+# http 和 https 的区别，TLS握手的过程
+
 这个是高频考点。
 
-`http+加密+认证+完整性保护` 就得到https，而这些是通过`SSL/TLS`层实现的。
+`http+加密+认证+完整性保护` 就得到https，而这些是通过 `SSL/TLS` 层实现的。
 
 避免中间人攻击。
 
@@ -29,24 +49,25 @@
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200404220534558.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
 
 # http2.0
+
 目标：改善用户在使用Web时的速度体验。
 
 主要基于SPDY协议。它是Google开发的基于TCP协议的应用层协议。目标是优化HTTP协议的性能，通过压缩、多路复用和优先级 等技术，缩短网页的加载时间并提高安全性。SPDY协议的核心思想是尽量减少TCP连接数。SPDY并不是一种用于替代HTTP的协议，而是对HTTP协议的增强。
 
 特点：
+
 1. 二进制传输：二进制帧层，指HTTP消息在客户端和服务端如何封装和传输。与HTTP1.x的采用的换行符分隔文本不同，HTTP/2 消息被分成很小的消息和frame,然后每个消息和frame用二进制编码。
-   
+
 2. 多路复用：所谓多路复用，即在一个TCP连接中存在多个流，即可以同时发送多个请求。在客户端帧乱序发送，到对端后再根据每个帧首部的流标识符重新组装。
 3. Header压缩：使用 HPACK（HTTP2头部压缩算法）压缩格式对传输的header进行编码。并在两端维护了索引表，用于记录出现过的header，后面在传输过程中就可以传输已经记录过的header的键名，对端收到数据后就可以通过键名找到对应的值。
 4. 服务器推送：在 HTTP2.0 中，服务端可以在客户端某个请求后，主动推送其他资源。
-   
+
 # DNS（域名）解析步骤与原理
 域名 -> IP地址
 
 TTL：域名解析信息在DNS中的存在时间
 
 1. 浏览器自身缓存查找，域名被缓存的时间也可通过TTL属性来设置
-   
 2. 操作系统缓存查找（C盘hosts 只读）
 3. 请求本地域名服务器Local DNS Server（80%找到）
 4. 请求Root DNS，返回gTLD Server（国际顶尖域名服务器）给LDNS，LDNS请求gTLD，gTLD查找并返回域名对应的Name Server地址（网站注册的域名服务器）
@@ -60,21 +81,25 @@ TTL：域名解析信息在DNS中的存在时间
 域名收敛：移动端减少DNS解析时间
 
 # 跨域问题
+
 基于同源策略。当协议、域名、端口至少有一个不一致时就会发生跨域。
 
 同源策略限制的内容有：
-- cookie、localStorage、sessionStorage、indexedDB等存储型内容
-- DOM节点
-- ajax请求
+
+- cookie、localStorage、sessionStorage、indexedDB 等存储型内容
+- DOM 节点
+- ajax 请求
 
 允许跨域加载资源的标签：
+
 - `<img src=xxx>`
 - `<script src=xxx>`
 - `<link href=xxx>`
 
-跨域并不是请求发不出去，请求能发出去，服务端能收到请求并正常返回结果，只是**结果被浏览器拦截了**。这也说明了跨域并不能完全阻止 `CSRF`，因为请求毕竟是发出去了。
+跨域并不是请求发不出去，请求能发出去，服务端能收到请求并正常返回结果，只是 **结果被浏览器拦截了**。这也说明了跨域并不能完全阻止 `CSRF`，因为请求毕竟是发出去了。
 
 ## 解决跨域的方案
+
 1.	JSONP。利用 `<script>` 标签不发生跨域的特点，在服务器链接的参数中加入`callback`回调函数，通过这个回调函数获取服务端要传来的值。只能用于GET请求。
 2.	CORS，跨域资源共享。在服务端设置响应头`Access-Control-Allow-Origin`为客户端的地址。表示对这个连接放行。如果要传递cookie的话，需要在客户端设置`xhr.withCredentials = true`，在服务端设置响应报文`Access-Control-Allow-Credentials`为true。
 
@@ -102,15 +127,18 @@ TTL：域名解析信息在DNS中的存在时间
 ## 简单请求和复杂请求
 
 简单请求需要同时满足以下条件：
+
 1. 使用的方法为`GET`/`HEAD`/`POST`
 2. `Content-Type`为`text/plain`/`multipart/form-data`/`application/x-www-form-urlencoded`
 
 不符合以上条件的请求就肯定是复杂请求了。 复杂请求的 CORS 请求，会在正式通信之前，增加一次 HTTP 查询请求，称为"预检"请求，该请求是 options 方法的，通过该请求来知道服务端是否允许跨域请求。
 
 ## 优化OPTIONS请求
-设置`Access-Control-Max-Age`字段，那么当第一次请求该URL时会发出 `OPTIONS` 请求，浏览器会根据返回的 `Access-Control-Max-Age` 字段缓存该请求的`OPTIONS`预检请求的响应结果（具体缓存时间还取决于浏览器的支持的默认最大值，取两者最小值，一般为 10分钟）。在缓存有效期内，该资源的请求（ **URL和header字段都相同的情况下** ）不会再触发预检。（chrome 打开控制台可以看到，当服务器响应 `Access-Control-Max-Age` 时只有第一次请求会有预检，后面不会了。注意要开启缓存，去掉 `disable cache` 勾选。）
+
+设置 `Access-Control-Max-Age` 字段，那么当第一次请求该URL时会发出 `OPTIONS` 请求，浏览器会根据返回的 `Access-Control-Max-Age` 字段缓存该请求的 `OPTIONS` 预检请求的响应结果（具体缓存时间还取决于浏览器的支持的默认最大值，取两者最小值，一般为 10分钟）。在缓存有效期内，该资源的请求（ **URL和header字段都相同的情况下** ）不会再触发预检。（chrome 打开控制台可以看到，当服务器响应 `Access-Control-Max-Age` 时只有第一次请求会有预检，后面不会了。注意要开启缓存，去掉 `disable cache` 勾选。）
 
 ## postMessage可以解决的问题
+
 - 页面和其打开的新窗口的数据传递
 - 多窗口之间消息传递
 - 页面与嵌套的iframe消息传递
@@ -120,7 +148,7 @@ TTL：域名解析信息在DNS中的存在时间
 ## XSS
 跨域脚本攻击，指的是攻击者将攻击脚本代码恶意注入传给服务器，就比如填写表单时，填入一段script代码盗用cookie。
 
-可以通过设置一个过滤器避免、采用含有HttpOnly标志的Cookie在HTTP响应头Set-Cookie。
+可以通过设置一个过滤器避免、采用含有 `HttpOnly` 标志的 `Cookie` 在 `HTTP` 响应头 `Set-Cookie`。
 ## CSRF
 跨域请求伪造，一般通过钓鱼链接。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200404221134630.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
@@ -130,18 +158,23 @@ TTL：域名解析信息在DNS中的存在时间
 3.	阻止第三方网站请求接口
 4.	请求时附带验证信息，如验证码或 Token (这种情况下会发送预检请求)
 ## XSS攻击，Cookie相关的字段，HttpOnly
+
 cookie中设置HttpOnly属性，那么通过js脚本将无法读取到cookie信息，这样能有效的防止XSS攻击。
 
 ## CSRF攻击，Cookie的SameSite字段
+
 Chrome 51 开始，浏览器的 Cookie 新增加了一个SameSite属性，用来防止 CSRF 攻击和用户追踪。Cookie 的SameSite属性用来限制第三方 Cookie，从而减少安全风险。
 
 可以设置三个值：
-1. Strict：完全禁止第三方Cookie
+
+1. Strict：完全禁止第三方 Cookie
 2. Lax（Chrome默认）：只有导航到目标网址的 GET 请求才发送Cookie，这只包括三种情况：链接，预加载请求，GET 表单
 3. None：关闭该属性。不过，前提是必须同时设置Secure属性（Cookie 只能通过 HTTPS 协议发送），否则无效。
-   
+
 # 常见状态码及含义
+
 `1xx` 信息性状态码，表示接收的请求正在处理
+
   - 100（请求已被部分处理）、101（切换协议）
 
 `2xx` 成功状态码，表示请求正常处理完毕
@@ -162,6 +195,7 @@ Chrome 51 开始，浏览器的 Cookie 新增加了一个SameSite属性，用来
 fetch是xhr的替代品。
 ajax利用`XMLHttpRequest`对象来请求数据。ajax代码就不再贴出了，想看的可以去这里[前端面试之JavaScript篇](https://blog.csdn.net/qq_42532128/article/details/105316034)。
 fetch 是全局量 window 的一个方法。特点：
+
 1. fetch是基于promise实现的，也可以结合async/await。
 2. fetch请求默认是不带cookie的，需要设置fetch（URL，{credentials:’include’})
 Credentials的三种参数：omit（从不发送cookie），same-origin（同源发送），include（始终发送）
@@ -169,6 +203,7 @@ Credentials的三种参数：omit（从不发送cookie），same-origin（同源
 4. 所有版本的 IE 均不支持原生 Fetch
 
 下面看一下fetch的用法：
+
 ```js
 // 链式处理,将异步变为类似单线程的写法
 fetch('/example').then(function(response) {
@@ -176,7 +211,7 @@ fetch('/example').then(function(response) {
 }).then(function(returnedValue) {
     // ... 执行成功, 第2步...
 }).catch(function(err) {
-    // 中途任何地方出错...在此处理 :( 
+    // 中途任何地方出错...在此处理 :(
 });
 ```
 

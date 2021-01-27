@@ -156,7 +156,7 @@ Promise 是一个对象，它代表了一个异步操作的最终完成或者失
 - promise
 - process.nextTick（node中使用）
 - MutationObserver
-  
+
 ## 常见宏任务
 - script
 - setTimeout/setInterval

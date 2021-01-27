@@ -8,8 +8,8 @@
 /**
  * 函数节流
  * 用户触发事件后，开始计时，之后每隔一段固定的时间，执行一次程序
- * @param {function} fn 
- * @param {number} interval 
+ * @param {function} fn
+ * @param {number} interval
  */
 const throttle = function (fn, interval = 17) {
     let timer,  // 计时器

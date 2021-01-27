@@ -74,6 +74,24 @@ Webkit和FireFox都做了这种优化，在js解析的同时，另一个进程�
 ## 插入几万个 DOM，如何实现页面不卡顿
 1. 通过 `requestAnimationFrame` 循环插入DOM
 2. 虚拟滚动：只渲染可视区域内的内容，非可见区域的就完全不渲染了，当用户在滚动的时候就实时去替换渲染的内容
+
+# 重绘和回流
+- 重绘是当节点需要更改外观而不会影响布局的，比如改变 color 。
+- 回流是布局或者几何属性需要改变。
+
+回流必定会发生重绘，重绘不一定会引发回流。回流所需的成本比重绘高的多，改变父节点里的子节点很可能会导致父节点的一系列回流。
+
+重绘和回流其实也和 Eventloop 有关。
+1. 当 Eventloop 执行完 Microtasks 后，会判断 document 是否需要更新，因为浏览器是 60Hz 的刷新率，每 16.6ms 才会更新一次。
+2. 然后判断是否有 resize 或者 scroll 事件，有的话会去触发事件，所以 resize 和 scroll 事件也是至少 16ms 才会触发一次，并且自带节流功能。
+3. 判断是否触发了 media query
+4. 更新动画并且发送事件
+5. 判断是否有全屏操作事件
+6. 执行 requestAnimationFrame 回调
+7. 执行 IntersectionObserver 回调，该方法用于判断元素是否可见，可以用于懒加载上，但是兼容性不好
+8. 更新界面
+9. 以上就是一帧中可能会做的事情。如果在一帧中有空闲时间，就会去执行 requestIdleCallback 回调。
+
 # Chrome Performan 分析
 对于以下html文档进行分析。首先进入匿名模式（windows 快捷键`ctrl+shift+N`），并确保Performance中screenshots是选中的，在Performance中进行记录，得到的记录结果可以在[链接](https://pan.baidu.com/s/1WxVwaBbMJ_SziyEds97RRg)中下载。
 ```html

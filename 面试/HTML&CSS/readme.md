@@ -1,19 +1,19 @@
 # 语义化标签
 让标签具有自己的含义。
 
-常见语义化标签：`title` / `header` / `footer` / `article` / `hn(h1~h6)` / `main` / `nav` / `strong` / `code` 等。
+常见语义化标签：`title` / `header` / `footer` / `article` / `hn(h1~h6)` / `main` / `nav` / `strong` / `code` / `center` 等。
 
 好处：
 1. 代码结构清晰，方便阅读，有利于团队合作开发。
 2. 方便其他设备解析（如屏幕阅读器、盲人阅读器、移动设备）以语义的方式来渲染网页。
 3. 即使在没有CSS样式情况下也以一种文档格式显示，并且是容易阅读的。
 4. 有利于搜索引擎优化（SEO）。
-   
-# `<meta>` 标签
-meta标签：提供给页面的一些元信息（名称/值对）， 比如针对搜索引擎和更新频度的描述和关键词。
 
-- `name`：名称/值对 中的名称。常用的有author、description、keywords、generator、revised、others。把 content 属性关联到一个名称。
-- `http-equiv`：没有 name 时，会采用这个属性的值。常用的有content-type、expires、refresh、set-cookie。把 content 属性关联到 http 头部。
+# `<meta>` 标签
+meta 标签：提供给页面的一些元信息（名称/值对）， 比如针对搜索引擎和更新频度的描述和关键词。
+
+- `name`：名称/值对 中的名称。常用的有 author、description、keywords、generator、revised、others。把 content 属性关联到一个名称。
+- `http-equiv`：没有 name 时，会采用这个属性的值。常用的有 content-type、expires、refresh、set-cookie。把 content 属性关联到 http 头部。
 - `content`：名称/值对 中的值， 可以是任何有效的字符串。 始终要和 name 属性或 http-equiv 属性一起使用。
 - `scheme`：用于指定要用来翻译属性值的方案。
 
@@ -24,8 +24,9 @@ meta标签：提供给页面的一些元信息（名称/值对）， 比如针�
 - link属于XHTML标签，除了加载CSS外，还能用于定义RSS, 定义 rel 连接属性等作用，@import 是CSS提供的，只能用于加载CSS
 - 页面被加载的同时，link 会同时被加载，而 @import 引用的 CSS 会等到页面被加载完再加载
 - import 是 CSS2.1 提出的，只在IE5以上才能被识别，而 link 是 XHTML 标签，无兼容问题
-  
+
 # css中有哪些单位
+
 `px`、`em`、`rem`、`%`、`vh`、`vw`、`vmin`、`vmax`、`ex`、`ch`
 
 # px、em、rem的区别
@@ -41,6 +42,7 @@ meta标签：提供给页面的一些元信息（名称/值对）， 比如针�
 `rem` 是相对根元素的大小。
 
 根据屏幕宽度设置根元素的字体大小。这样一来其他基于根元素的大小会自动缩放。
+
 ```js
 <script type="text/javascript">
 　　document.documentElement.style.fontSize = document.documentElement.clientWidth / 640*100 + 'px';
@@ -61,7 +63,7 @@ meta标签：提供给页面的一些元信息（名称/值对）， 比如针�
 - `absolute` 和 `fixed` 定位会脱离文档流，不占据原来的位置
 
 # display可以取哪些值
-inline、block、inline-block、list-item、run-in、none、table、table-row、table-column、table-cell、inherit、table-row-group、table-column-group
+inline、block、inline-block、flex、none、inherit、list-item、run-in、table、table-row、table-column、table-cell、table-row-group、table-column-group
 
 # href和src的区别
 href：超文本引用。link、a。浏览器会识别 href 引用的文档并行下载该文档，并且不会停止对当前文档的处理。
@@ -86,7 +88,9 @@ Transition：对元素某个属性或多个属性的变化，进行控制(时间
 
 Animation：对元素某个属性或多个属性的变化，进行控制(时间等)，类似flash的补间动画。可以设置多个关键帧。
 
-Transition与Animation区别: transition需要触发一个事件，而animation在不需要触发任何事件的情况下也可以显式地随着时间变化来改变元素css的属性值，从而达到一种动画的效果。Transition: transition属性是一个简单的动画属性，非常简单非常容易用。可以说它是animation的简化版本，是给普通做简单网页特效用的。
+Transition与Animation区别: transition需要触发一个事件，而animation在不需要触发任何事件的情况下也可以显式地随着时间变化来改变元素css的属性值，从而达到一种动画的效果。
+
+Transition: transition属性是一个简单的动画属性，非常简单非常容易用。可以说它是animation的简化版本，是给普通做简单网页特效用的。
 
 # flex的使用方法，flex:1代表了什么
 
@@ -104,14 +108,14 @@ BFC 就是页面上的一个隔离的独立容器，容器里面的子元素不�
 
 **触发条件：**
 1.	float 不是 none
-2.	position不是 static 或 relative（absolute、fixed）
-3.	display是 inline-block、table-cell、flex、table-caption或 inline-flex
+2.	position 不是 static 或 relative（absolute、fixed）
+3.	display 是 inline-block、table-cell、flex、table-caption或 inline-flex
 4.	overflow 不是 visible（hidden、auto、scroll）
 5.	body 根元素
 
 **作用：**
 1.	避免margin重叠
-   
+
 属于同一个BFC的相邻box会发生margin重叠，所以可以设置两个不同的bfc（包裹div）
 
 2.	自适应两栏布局

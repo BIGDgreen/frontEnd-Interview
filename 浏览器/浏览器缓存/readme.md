@@ -15,7 +15,7 @@ DNS缓存和页面资源缓存
 - 格式如 `key=value;` 可以存储结构化数据。
 - 每次发送http请求，都会将本次请求的`请求域`的cookie一起发送给server端。
 - 同域名，cookie可以共享
-- server端可以修改cookie并返回给浏览器。
+- server 端可以修改cookie并返回给浏览器。
 - 浏览器中也可以通过js修改cookie（有限制）
 
 ## 浏览器查看cookie的三种方式
@@ -159,3 +159,12 @@ request header: If-Modify-Since
 response header: ETag（文件指纹）
 
 request header: If-None-Match
+
+# 缓存策略实际应用场景
+## 频繁变动的资源
+对于频繁变动的资源，首先需要使用 `Cache-Control: no-cache` 使浏览器每次都请求服务器，然后配合 `ETag` 或者 `Last-Modified` 来验证资源是否有效。这样的做法虽然不能节省请求数量，但是能显著减少响应数据大小。
+
+## 代码文件
+这里特指除了 HTML 外的代码文件，因为 HTML 文件一般不缓存或者缓存时间很短。
+
+一般来说，现在都会使用工具来打包代码，那么我们就可以对文件名进行哈希处理，只有当代码修改后才会生成新的文件名。基于此，我们就可以给代码文件设置缓存有效期一年 Cache-Control: max-age=31536000，这样只有当 HTML 文件中引入的文件名发生了改变才会去下载最新的代码文件，否则就一直使用缓存。
