@@ -50,7 +50,7 @@ Service Worker 实现缓存功能一般分为三个步骤：
             console.log('service worker 注册成功')
          })
          .catch(function(err) {
-            console.log('servcie worker 注册失败')
+            console.log('service worker 注册失败')
          })
       }
       // sw.js
