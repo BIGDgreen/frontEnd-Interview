@@ -1,3 +1,34 @@
+# Web 端即时通讯技术
+## 短轮询
+```js
+var xhr = new XMLHttpRequest();
+setInterval(function(){
+    xhr.open('GET','/user');
+    xhr.onreadystatechange = function(){
+
+    };
+    xhr.send();
+},1000)
+```
+
+## 长轮询
+
+```js
+function ajax(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET','/user');
+    xhr.onreadystatechange = function(){
+          ajax();
+    };
+    xhr.send();
+}
+```
+
+## Comet
+
+## SSE
+
+## Websocket
 websocket的最大特点就是：服务器可以主动向客户端推送信息，客户端也可以主动向服务器发送信息，是真正的双向平等对话，属于服务器推送技术的一种。
 
 ![](https://s1.ax1x.com/2020/07/13/UJ5vFO.png)

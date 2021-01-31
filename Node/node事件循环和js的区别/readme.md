@@ -13,7 +13,7 @@
 ## 在73以下版本和73版本的区别
 谷歌（金丝雀）73版本中
 
-使用对PromiseResolve的调用来更改await的语义，以减少在公共awaitPromise情况下的转换次数。
+使用对 PromiseResolve 的调用来更改 await 的语义，以减少在公共 awaitPromise 情况下的转换次数。
 
 如果传递给 await 的值已经是一个 Promise，那么这种优化避免了再次创建 Promise 包装器，在这种情况下，我们从最少三个 microtick 到只有一个 microtick。
 
@@ -21,15 +21,16 @@
 
 从任务调度的角度讲，node更省时
 
-
 Node 11.x + 有变化
+
+![](node事件循环.webp)
 
 Node的Event loop一共分为6个阶段，每个细节具体如下：
 
 1. `timers`: 执行setTimeout和setInterval中到期的callback。
-2. `pending callback (I/O)`: 上一轮循环中少数的callback会放在这一阶段执行。
+2. `pending callbacks (I/O)`: 上一轮循环中少数的callback会放在这一阶段执行。
 3. `idle, prepare`: 仅在内部使用。
-4. `poll`: 最重要的阶段，执行pending callback，在适当的情况下回阻塞在这个阶段。
+4. `poll`: 最重要的阶段，执行pending callback，在适当的情况下会阻塞在这个阶段。
     这一阶段中，系统会做两件事情
 
     - 回到 timer 阶段执行回调

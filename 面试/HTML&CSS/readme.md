@@ -14,16 +14,16 @@ meta 标签：提供给页面的一些元信息（名称/值对）， 比如针�
 
 - `name`：名称/值对 中的名称。常用的有 author、description、keywords、generator、revised、others。把 content 属性关联到一个名称。
 - `http-equiv`：没有 name 时，会采用这个属性的值。常用的有 content-type、expires、refresh、set-cookie。把 content 属性关联到 http 头部。
-- `content`：名称/值对 中的值， 可以是任何有效的字符串。 始终要和 name 属性或 http-equiv 属性一起使用。
+- `content`：名称/值对 中的值，可以是任何有效的字符串。始终要和 name 属性或 http-equiv 属性一起使用。
 - `scheme`：用于指定要用来翻译属性值的方案。
 
 # @import @media @charset 等 @ 规则
-`@` 规则（at-rule）是一个CSS语句，以 at 符号开头，`@` 后面跟一个标识符，并包括直到下一个分号的所有内容，或是下一个CSS代码块，就近原则，先到的为准。
+`@` 规则（at-rule）是一个 CSS 语句，以 at 符号开头，`@` 后面跟一个标识符，并包括直到下一个分号的所有内容，或是下一个 CSS 代码块，就近原则，先到的为准。
 
 # 页面导入样式时，使用link和@import的区别
-- link属于XHTML标签，除了加载CSS外，还能用于定义RSS, 定义 rel 连接属性等作用，@import 是CSS提供的，只能用于加载CSS
+- link 属于 XHTML 标签，除了加载 CSS 外，还能用于定义 RSS，定义 rel 连接属性等作用，@import 是 CSS 提供的，只能用于加载 CSS
 - 页面被加载的同时，link 会同时被加载，而 @import 引用的 CSS 会等到页面被加载完再加载
-- import 是 CSS2.1 提出的，只在IE5以上才能被识别，而 link 是 XHTML 标签，无兼容问题
+- import 是 CSS2.1 提出的，只在 IE5 以上才能被识别，而 link 是 XHTML 标签，无兼容问题
 
 # css中有哪些单位
 

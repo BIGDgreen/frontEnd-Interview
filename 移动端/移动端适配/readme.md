@@ -14,7 +14,7 @@ DIP（Device Independent Pixel），缩放比为1时，设备独立像素也等�
 
     设备像素比DPR = 设备像素/设备无关像素(在某一方向上，x方向或者y方向)
 
-**缩放比为1时，** 设备无关像素等于CSS像素，因此 
+**缩放比为1时，** 设备无关像素等于CSS像素，因此
 
     设备像素比DPR = 设备像素/CSS像素(在某一方向上，x方向或者y方向)
 
@@ -26,11 +26,11 @@ DIP（Device Independent Pixel），缩放比为1时，设备独立像素也等�
 
 ## 获取DPR的方法
 1. js获取：`window.devicePixelRatio`。
-   
+
    打开控制台，输入`window.devicePixelRatio`。就可以看到当前设备的DPR。切换手机视图，再次输入，可以看到模拟的手机视图的DPR。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2020051223342343.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNTMyMTI4,size_16,color_FFFFFF,t_70)
 上图中，第一个是PC端dpr，第二个是iPhoneX的dpr。
-2. css媒体查询：`min-device-pixel-ratio`
+1. css媒体查询：`min-device-pixel-ratio`
 
 # 关于视口
 这部分内容中的图借用一下思否中的一篇文章：[关于移动端适配，你必须知道的](https://segmentfault.com/a/1190000019207842#item-5-10)

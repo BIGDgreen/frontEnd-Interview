@@ -110,9 +110,9 @@ Vue.component('async-component', resolve => {
 `optimization.splitChunks`提取公共组件
 
 2. ssr 预渲染 同构
-   
+
 - ssr：服务端渲染（对于php jsp）
-  
+
   vue -> json -> vue-server-renderer -> html
 
 - 同构：一套代码，多端使用（对于vue react nuxt）
@@ -123,11 +123,11 @@ Vue.component('async-component', resolve => {
 
 - 预渲染：预先渲染 webpack vue打包出来的项目js放到 **无头游览器** 执行 -> 获取到预渲染的页面html内容 -> index.html -> 放到CDN  FCP/FMP提前到FP
 
-3. 加loading -> 骨架屏 -> 预渲染
-4. webpack entry 改为多页应用
-5. 资源请求时间片的处理
-6. CDN
-7. quickLink：在浏览器空闲的时候去解析预加载可能要跳转的页面
+1. 加loading -> 骨架屏 -> 预渲染
+2. webpack entry 改为多页应用
+3. 资源请求时间片的处理
+4. CDN
+5. quickLink：在浏览器空闲的时候去解析预加载可能要跳转的页面
    
    > preload
    > 

@@ -1,4 +1,3 @@
-
 # express中间件的简单实现
 ## 说明
 本次的简单实现中实现了express的`use`，`get`，`post`，`listen`，`res.json`和中间件的`next`机制。
@@ -18,7 +17,7 @@
     app.use('/api/demo', loginCheck(), handleDemo());   // 传路由+多个函数
 ```
 3. 在实例上调用方法`get`，`get`方法参数形式与`use`相同，所不同的是只有当请求方法为`get`时，`app.get`中传入的函数才会被执行。
-   
+
 4. 在实例上调用方法`post`，`post`与`get`形式一样，只是请求方法变成了`post`。
 
 5. 在实例上调用`listen`方法，用于启动`http`服务，通常，我们会给listen方法传入一个端口和一个方法：

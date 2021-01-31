@@ -23,6 +23,10 @@ CSP 本质上就是建立白名单，开发者明确告诉浏览器哪些外部�
   ```
   Content-Security-Policy: child-src 'none'
   ```
+
+## HTTPOnly
+给 Cookie 设置 HTTPOnly 属性可以防止客户端脚本通过 `document.cookie` 等方式访问 Cookie，有助于避免 XSS 攻击。
+
 # CSRF
 ## 防御
 防范 CSRF 攻击可以遵循以下几种规则：
